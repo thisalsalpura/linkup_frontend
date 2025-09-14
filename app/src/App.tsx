@@ -1,13 +1,33 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { useCustomFonts } from "./hooks/UseFonts";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Splash from "./screens/Splash";
 import "./global.css";
+import Loader from "./components/Loader";
+
+export type RootParamList = {
+  Splash: undefined;
+  SignIn: undefined;
+  Register: undefined;
+  Home: undefined;
+}
 
 export default function App() {
+
+  const Stack = createNativeStackNavigator<RootParamList>();
+
+  const fontsLoaded = useCustomFonts();
+
+  if (!fontsLoaded) {
+    return (<Loader />);
+  }
+
   return (
-    <View className="flex-1 bg-white justify-center items-center">
-      <Text className="text-5xl text-black font-bold">Welcome!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={Splash} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
