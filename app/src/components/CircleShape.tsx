@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Animated } from "react-native";
 
 interface Circle {
     height: number;
@@ -10,19 +10,23 @@ interface Circle {
     rightValue?: number;
     bottomValue?: number;
     leftValue?: number;
+    animatedStyle?: any;
 }
 
-export default function CircleShape({ height, width, fillColor, borderRadius, topValue, rightValue, bottomValue, leftValue }: Circle) {
+export default function CircleShape({ height, width, fillColor, borderRadius, topValue, rightValue, bottomValue, leftValue, animatedStyle }: Circle) {
     return (
-        <View className="absolute" style={{
-            width: width,
-            height: height,
-            backgroundColor: fillColor,
-            borderRadius: borderRadius,
-            ...(topValue !== undefined && { top: topValue }),
-            ...(rightValue !== undefined && { right: rightValue }),
-            ...(bottomValue !== undefined && { bottom: bottomValue }),
-            ...(leftValue !== undefined && { left: leftValue })
-        }}></View>
+        <Animated.View className="absolute" style={[
+            {
+                width: width,
+                height: height,
+                backgroundColor: fillColor,
+                borderRadius: borderRadius,
+                ...(topValue !== undefined && { top: topValue }),
+                ...(rightValue !== undefined && { right: rightValue }),
+                ...(bottomValue !== undefined && { bottom: bottomValue }),
+                ...(leftValue !== undefined && { left: leftValue })
+            },
+            animatedStyle
+        ]}></Animated.View>
     );
 }

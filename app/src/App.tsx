@@ -2,9 +2,10 @@ import React from "react";
 import { useCustomFonts } from "./hooks/UseFonts";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Splash from "./screens/Splash";
-import "./global.css";
 import Loader from "./components/Loader";
+import Splash from "./screens/Splash";
+import Home from "./screens/Home";
+import "./global.css";
 
 export type RootParamList = {
   Splash: undefined;
@@ -27,6 +28,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );
