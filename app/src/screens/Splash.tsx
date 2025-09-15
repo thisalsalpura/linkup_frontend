@@ -43,12 +43,6 @@ export default function Splash() {
                     easing: Easing.inOut(Easing.ease),
                     useNativeDriver: true,
                 }),
-                Animated.timing(animatedValue, {
-                    toValue: 0,
-                    duration,
-                    easing: Easing.inOut(Easing.ease),
-                    useNativeDriver: true,
-                }),
             ])
         ).start();
     };
