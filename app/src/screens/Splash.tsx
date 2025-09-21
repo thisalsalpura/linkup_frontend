@@ -52,7 +52,7 @@ export default function Splash() {
     useEffect(() => {
         if (progress >= 1 && !hasNavigated.current) {
             hasNavigated.current = true;
-            navigator.navigate("SignIn");
+            navigator.replace("SignIn");
         }
     }, [progress, navigator]);
 
