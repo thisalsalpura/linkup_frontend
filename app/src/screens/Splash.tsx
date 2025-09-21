@@ -9,12 +9,15 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootParamList } from "../App";
 import { useNavigation } from "@react-navigation/native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useTheme } from "../theme/ThemeProvider";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList>;
 
 export default function Splash() {
 
     const navigator = useNavigation<NavigationProps>();
+
+    const { applied } = useTheme();
 
     const [progress, setProgress] = useState(0);
 
@@ -49,13 +52,13 @@ export default function Splash() {
     useEffect(() => {
         if (progress >= 1 && !hasNavigated.current) {
             hasNavigated.current = true;
-            navigator.navigate("Home");
+            navigator.navigate("SignIn");
         }
     }, [progress, navigator]);
 
     return (
-        <SafeAreaView className="flex-1 bg-sand-300" edges={["top", "bottom"]}>
-            <View className="h-full w-full bg-sand-200 justify-center items-center p-4">
+        <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
+            <View className="h-full w-full bg-white dark:bg-[#1C1C21] justify-center items-center p-4">
                 <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} topValue={-65} leftValue={-75} />
                 <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} topValue={-125} leftValue={20} />
 
@@ -68,10 +71,10 @@ export default function Splash() {
                         progress={progress}
                         width={180}
                         height={10}
-                        color="#1F2937"
+                        color="#D5BDAF"
                         borderRadius={2}
                         borderWidth={0}
-                        unfilledColor="#FFFFFF"
+                        unfilledColor={applied === "dark" ? "#FFFFFF" : "#000000"}
                         animated={true}
                     />
                 </Animated.View>
