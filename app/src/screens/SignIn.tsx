@@ -7,6 +7,7 @@ import { SvgUri } from "react-native-svg";
 import { useTheme } from "../theme/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
 import Button from "../components/Button";
+import CircleShape from "../components/CircleShape";
 
 export default function SignIn() {
 
@@ -82,6 +83,9 @@ export default function SignIn() {
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
+
+            <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} bottomValue={-30} rightValue={-95} />
+            <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} bottomValue={-40} rightValue={45} />
 
             <StatusBar hidden={true} />
         </SafeAreaView>
