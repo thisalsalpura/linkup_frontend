@@ -27,8 +27,8 @@ export default function Button(button: ButtonProps) {
     return (
         <Pressable onPress={button.onPress} className={`btn ${button.containerClass}`}>
             <View className="relative flex h-4 w-4 items-center rounded-full">
-                <Animated.View style={animationStyle} className="btn-ping"></Animated.View>
-                <View className="btn-ping_dot"></View>
+                <Animated.View style={animationStyle} className="btn-ping" />
+                <View className="btn-ping_dot" />
             </View>
             <Text className={`text-xl text-center font-EncodeSansCondensedBold tracking-wide ${button.textClass}`}>{button.name}</Text>
         </Pressable>

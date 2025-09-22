@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +8,8 @@ import { useTheme } from "../theme/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
 import Button from "../components/Button";
 import CircleShape from "../components/CircleShape";
+import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { clamp, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 export default function SignIn() {
 
@@ -19,68 +21,101 @@ export default function SignIn() {
 
     const [show, setShow] = useState(false);
 
+    const { width } = Dimensions.get('screen');
+
+    const translateX = useSharedValue(0);
+    const startTranslateX = useSharedValue(0);
+
+    const fling = Gesture.Fling()
+        .direction(Directions.LEFT | Directions.RIGHT)
+        .onBegin((event) => {
+            startTranslateX.value = event.x;
+        })
+        .onStart((event) => {
+            translateX.value = withTiming(
+                clamp(
+                    translateX.value + event.x - startTranslateX.value,
+                    width / -2 + 50,
+                    width / 2 - 50
+                ),
+                { duration: 200 }
+            );
+        })
+        .runOnJS(true);
+
+    const btnAnimationStyles = useAnimatedStyle(() => ({
+        transform: [{ translateX: translateX.value }],
+    }));
+
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
             <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
-                    <View className="flex-1 w-full justify-start items-center px-8 py-12">
-                        <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
-                            <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
-                        </View>
-
-                        <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <View className="h-auto w-full flex justify-center items-center">
-                                <TextInput
-                                    label="Email"
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    mode="outlined"
-                                    textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                    outlineColor="#E3D5CA"
-                                    activeOutlineColor="#D5BDAF"
-                                    keyboardType="email-address"
-                                    style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                    theme={{
-                                        colors: {
-                                            placeholder: "#E3D5CA",
-                                            primary: "#D5BDAF"
-                                        }
-                                    }}
-                                />
+                    <GestureHandlerRootView>
+                        <View className="flex-1 w-full justify-start items-center px-8 py-12">
+                            <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
+                                <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
+                                <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
                             </View>
 
-                            <View className="h-auto w-full flex justify-center items-center">
-                                <TextInput
-                                    label="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
-                                    mode="outlined"
-                                    textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                    outlineColor="#E3D5CA"
-                                    activeOutlineColor="#D5BDAF"
-                                    secureTextEntry={show}
-                                    right={
-                                        <TextInput.Icon
-                                            icon={show ? "eye-off" : "eye"}
-                                            onPress={() => setShow(!show)}
-                                        />
-                                    }
-                                    style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                    theme={{
-                                        colors: {
-                                            placeholder: "#E3D5CA",
-                                            primary: "#D5BDAF"
+                            <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
+                                <View className="h-auto w-full flex justify-center items-center">
+                                    <TextInput
+                                        label="Email"
+                                        value={email}
+                                        onChangeText={setEmail}
+                                        mode="outlined"
+                                        textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
+                                        outlineColor="#E3D5CA"
+                                        activeOutlineColor="#D5BDAF"
+                                        keyboardType="email-address"
+                                        style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
+                                        theme={{
+                                            colors: {
+                                                placeholder: "#E3D5CA",
+                                                primary: "#D5BDAF"
+                                            }
+                                        }}
+                                    />
+                                </View>
+
+                                <View className="h-auto w-full flex justify-center items-center">
+                                    <TextInput
+                                        label="Password"
+                                        value={password}
+                                        onChangeText={setPassword}
+                                        mode="outlined"
+                                        textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
+                                        outlineColor="#E3D5CA"
+                                        activeOutlineColor="#D5BDAF"
+                                        secureTextEntry={show}
+                                        right={
+                                            <TextInput.Icon
+                                                icon={show ? "eye-off" : "eye"}
+                                                onPress={() => setShow(!show)}
+                                            />
                                         }
-                                    }}
-                                />
+                                        style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
+                                        theme={{
+                                            colors: {
+                                                placeholder: "#E3D5CA",
+                                                primary: "#D5BDAF"
+                                            }
+                                        }}
+                                    />
+                                </View>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
+                                <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
+                                <GestureDetector gesture={fling}>
+                                    <Animated.View className="h-auto w-full" style={btnAnimationStyles}>
+                                        <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
+                                    </Animated.View>
+                                </GestureDetector>
                             </View>
                         </View>
-
-                        <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
-                        </View>
-                    </View>
+                    </GestureHandlerRootView>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
 
