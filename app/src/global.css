@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .btn {
+        @apply w-full flex flex-row items-center justify-center p-4 rounded-[10px] gap-6;
+    }
+
+    .btn-ping {
+        @apply absolute inline-flex h-full w-full bg-sand-300 rounded-full opacity-75;
+    }
+
+    .btn-ping_dot {
+        @apply relative inline-flex rounded-full h-4 w-4 bg-sand-400;
+    }
+}
