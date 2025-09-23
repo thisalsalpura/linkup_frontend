@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgUri } from "react-native-svg";
-import { useTheme } from "../theme/ThemeProvider";
-import { StatusBar } from "expo-status-bar";
-import Button from "../components/Button";
 import CircleShape from "../components/CircleShape";
+import { StatusBar } from "expo-status-bar";
+import { TextInput } from "react-native-paper";
+import { useTheme } from "../theme/ThemeProvider";
+import Button from "../components/Button";
 
-export default function SignIn() {
+export default function NumberRegistration() {
+
 
     const { applied } = useTheme();
 
-    const [email, setEmail] = useState('');
+    const [countryCode, setCountryCode] = useState('');
 
-    const [password, setPassword] = useState('');
-
-    const [show, setShow] = useState(false);
+    const [mobile, setMobile] = useState('');
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -29,17 +28,27 @@ export default function SignIn() {
                             <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
                         </View>
 
-                        <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <View className="h-auto w-full flex justify-center items-center">
+                        <View className="mt-10 h-auto w-full flex justify-center items-center">
+                            <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Let's register your Mobile Number!</Text>
+                        </View>
+
+                        <View className="mt-10 h-auto w-full flex justify-center items-start">
+                            <View className="h-auto w-auto bg-sand-400 rounded-full px-4 py-2">
+                                <Text className="text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Step 2</Text>
+                            </View>
+                        </View>
+
+                        <View className="mt-10 h-auto w-full flex flex-row justify-center items-start gap-2">
+                            <View className="h-auto w-[30%] flex justify-center items-center">
                                 <TextInput
-                                    label="Email"
-                                    value={email}
-                                    onChangeText={setEmail}
+                                    label="Contry Code"
+                                    value={countryCode}
+                                    onChangeText={setCountryCode}
                                     mode="outlined"
                                     textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
                                     outlineColor="#E3D5CA"
                                     activeOutlineColor="#D5BDAF"
-                                    keyboardType="email-address"
+                                    keyboardType="phone-pad"
                                     style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
                                     theme={{
                                         colors: {
@@ -50,22 +59,16 @@ export default function SignIn() {
                                 />
                             </View>
 
-                            <View className="h-auto w-full flex justify-center items-center">
+                            <View className="h-auto w-[70%] flex justify-center items-center">
                                 <TextInput
-                                    label="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
+                                    label="Mobile Number"
+                                    value={mobile}
+                                    onChangeText={setMobile}
                                     mode="outlined"
                                     textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
                                     outlineColor="#E3D5CA"
                                     activeOutlineColor="#D5BDAF"
-                                    secureTextEntry={show}
-                                    right={
-                                        <TextInput.Icon
-                                            icon={show ? "eye-off" : "eye"}
-                                            onPress={() => setShow(!show)}
-                                        />
-                                    }
+                                    keyboardType="phone-pad"
                                     style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
                                     theme={{
                                         colors: {
@@ -78,8 +81,7 @@ export default function SignIn() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={false} />
-                            <Button name="Register" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button name="Next" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>

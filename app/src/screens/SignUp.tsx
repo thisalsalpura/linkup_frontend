@@ -8,8 +8,15 @@ import { useTheme } from "../theme/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
 import Button from "../components/Button";
 import CircleShape from "../components/CircleShape";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootParamList } from "../App";
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = NativeStackNavigationProp<RootParamList, "NumberRegistration">;
 
 export default function SignUp() {
+
+    const navigator = useNavigation<NavigationProps>();
 
     const { applied } = useTheme();
 
@@ -25,6 +32,16 @@ export default function SignUp() {
                         <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
                             <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
                             <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
+                        </View>
+
+                        <View className="mt-10 h-auto w-full flex justify-center items-center">
+                            <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Let's setup Account!</Text>
+                        </View>
+
+                        <View className="mt-10 h-auto w-full flex justify-center items-start">
+                            <View className="h-auto w-auto bg-sand-400 rounded-full px-4 py-2">
+                                <Text className="text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Step 1</Text>
+                            </View>
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
@@ -68,7 +85,7 @@ export default function SignUp() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Next" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button name="Next" onPress={() => { navigator.replace("NumberRegistration") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>

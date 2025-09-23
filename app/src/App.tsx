@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Loader from "./components/Loader";
 import Splash from "./screens/Splash";
 import SignIn from "./screens/SignIn";
+import NumberRegistration from "./screens/NumberRegistration";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import { ThemeProvider } from "./theme/ThemeProvider";
@@ -15,6 +16,7 @@ export type RootParamList = {
   Splash: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  NumberRegistration: undefined;
   Home: undefined;
 }
 
@@ -57,6 +59,7 @@ export default function App() {
             <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
             <Stack.Screen name="Home" component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
