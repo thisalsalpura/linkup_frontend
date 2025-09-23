@@ -11,7 +11,6 @@ import Button from "../components/Button";
 
 export default function NumberRegistration() {
 
-
     const { applied } = useTheme();
 
     const [countryCode, setCountryCode] = useState('');
