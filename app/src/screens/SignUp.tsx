@@ -17,17 +17,9 @@ export default function SignUp() {
 
     const [lname, setLname] = useState('');
 
-    const [email, setEmail] = useState('');
-
-    const [password, setPassword] = useState('');
-
-    const [mobile, setMobile] = useState('');
-
-    const [show, setShow] = useState(false);
-
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
-            <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
                 <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
                     <View className="flex-1 w-full justify-start items-center px-8 py-12">
                         <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
@@ -73,76 +65,10 @@ export default function SignUp() {
                                     }}
                                 />
                             </View>
-
-                            <View className="h-auto w-full flex justify-center items-center">
-                                <TextInput
-                                    label="Email"
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    mode="outlined"
-                                    textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                    outlineColor="#E3D5CA"
-                                    activeOutlineColor="#D5BDAF"
-                                    keyboardType="email-address"
-                                    style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                    theme={{
-                                        colors: {
-                                            placeholder: "#E3D5CA",
-                                            primary: "#D5BDAF"
-                                        }
-                                    }}
-                                />
-                            </View>
-
-                            <View className="h-auto w-full flex justify-center items-center">
-                                <TextInput
-                                    label="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
-                                    mode="outlined"
-                                    textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                    outlineColor="#E3D5CA"
-                                    activeOutlineColor="#D5BDAF"
-                                    secureTextEntry={show}
-                                    right={
-                                        <TextInput.Icon
-                                            icon={show ? "eye-off" : "eye"}
-                                            onPress={() => setShow(!show)}
-                                        />
-                                    }
-                                    style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                    theme={{
-                                        colors: {
-                                            placeholder: "#E3D5CA",
-                                            primary: "#D5BDAF"
-                                        }
-                                    }}
-                                />
-                            </View>
-
-                            <View className="h-auto w-full flex justify-center items-center">
-                                <TextInput
-                                    label="Mobile"
-                                    value={mobile}
-                                    onChangeText={setMobile}
-                                    mode="outlined"
-                                    textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                    outlineColor="#E3D5CA"
-                                    activeOutlineColor="#D5BDAF"
-                                    keyboardType="phone-pad"
-                                    style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                    theme={{
-                                        colors: {
-                                            placeholder: "#E3D5CA",
-                                            primary: "#D5BDAF"
-                                        }
-                                    }}
-                                />
-                            </View>
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Sign Up" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
+                            <Button name="Next" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>

@@ -49,7 +49,7 @@ export default function SignIn() {
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
-            <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
                 <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
                     <GestureHandlerRootView>
                         <View className="flex-1 w-full justify-start items-center px-8 py-12">
@@ -107,10 +107,10 @@ export default function SignIn() {
                             </View>
 
                             <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                                <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
+                                <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={false} />
                                 <GestureDetector gesture={fling}>
                                     <Animated.View className="h-auto w-full" style={btnAnimationStyles}>
-                                        <Button name="Sign In" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" />
+                                        <Button name="Register" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
                                     </Animated.View>
                                 </GestureDetector>
                             </View>
