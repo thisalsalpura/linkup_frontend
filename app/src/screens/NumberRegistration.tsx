@@ -8,14 +8,26 @@ import { StatusBar } from "expo-status-bar";
 import { TextInput } from "react-native-paper";
 import { useTheme } from "../theme/ThemeProvider";
 import Button from "../components/Button";
+import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
+import { RootParamList } from "../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = NativeStackNavigationProp<RootParamList, "AvatarAdding">;
 
 export default function NumberRegistration() {
 
+    const navigator = useNavigation<NavigationProps>();
+
     const { applied } = useTheme();
 
-    const [countryCode, setCountryCode] = useState('');
-
     const [mobile, setMobile] = useState('');
+
+    const [show, setShow] = useState<boolean>(false);
+
+    const [countryCode, setCountryCode] = useState<CountryCode>("LK");
+
+    const [country, setCountry] = useState<Country | null>(null);
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -37,12 +49,34 @@ export default function NumberRegistration() {
                             </View>
                         </View>
 
+                        <View className="mt-10 h-[50px] w-full bg-black dark:bg-white flex flex-row justify-center items-center border-2 border-black dark:border-white rounded-[10px]">
+                            <CountryPicker
+                                countryCode={countryCode}
+                                withFilter
+                                withFlag
+                                withCountryNameButton
+                                withCallingCode
+                                visible={show}
+                                onClose={() => setShow(false)}
+                                onSelect={(c) => {
+                                    setCountryCode(c.cca2);
+                                    setCountry(c);
+                                    setShow(false);
+                                }}
+                                theme={{
+                                    backgroundColor: applied === "dark" ? "#FFFFFF" : "#1C1C21",
+                                    onBackgroundTextColor: applied === "dark" ? "#000000" : "#FFFFFF",
+                                    fontFamily: "EncodeSansCondensedBold",
+                                }}
+                            />
+                        </View>
+
                         <View className="mt-10 h-auto w-full flex flex-row justify-center items-start gap-2">
                             <View className="h-auto w-[30%] flex justify-center items-center">
                                 <TextInput
                                     label="Contry Code"
-                                    value={countryCode}
-                                    onChangeText={setCountryCode}
+                                    value={country ? `+${country.callingCode}` : `+94`}
+                                    editable={false}
                                     mode="outlined"
                                     textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
                                     outlineColor="#E3D5CA"
@@ -80,7 +114,7 @@ export default function NumberRegistration() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Next" containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button name="Next" onPress={() => { navigator.replace("AvatarAdding") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>

@@ -6,6 +6,7 @@ import Loader from "./components/Loader";
 import Splash from "./screens/Splash";
 import SignIn from "./screens/SignIn";
 import NumberRegistration from "./screens/NumberRegistration";
+import AvatarAdding from "./screens/AvatarAdding";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import { ThemeProvider } from "./theme/ThemeProvider";
@@ -17,6 +18,7 @@ export type RootParamList = {
   SignIn: undefined;
   SignUp: undefined;
   NumberRegistration: undefined;
+  AvatarAdding: undefined;
   Home: undefined;
 }
 
@@ -60,6 +62,7 @@ export default function App() {
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
+            <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
             <Stack.Screen name="Home" component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
