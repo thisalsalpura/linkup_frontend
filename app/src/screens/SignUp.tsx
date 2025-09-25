@@ -7,10 +7,12 @@ import { SvgUri } from "react-native-svg";
 import { useTheme } from "../theme/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
 import Button from "../components/Button";
-import CircleShape from "../components/CircleShape";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootParamList } from "../App";
 import { useNavigation } from "@react-navigation/native";
+import { useUserRegistration } from "../hooks/UserContext";
+import { validateFname } from "../util/Validation";
+import { Toast } from "toastify-react-native";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "NumberRegistration">;
 
@@ -23,6 +25,8 @@ export default function SignUp() {
     const [fname, setFname] = useState('');
 
     const [lname, setLname] = useState('');
+
+    const { userData, setUserData } = useUserRegistration();
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -85,14 +89,35 @@ export default function SignUp() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Next" onPress={() => { navigator.replace("NumberRegistration") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button
+                                name="Next"
+                                onPress={() => {
+                                    const validFname = validateFname(fname);
+                                    const validLname = validateFname(lname);
+
+                                    if (validFname) {
+                                        Toast.error("First name is required!", "bottom");
+
+                                    } else if (validLname) {
+                                        Toast.error("Last name is required!", "bottom");
+                                    } else {
+                                        setUserData((previous) => ({
+                                            ...previous,
+                                            fname: fname,
+                                            lname: lname
+                                        }));
+
+                                        navigator.replace("NumberRegistration");
+                                    }
+                                }}
+                                containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
+                                textClass="text-white dark:text-black"
+                                showIcon={true}
+                            />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
-
-            <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} bottomValue={-30} rightValue={-95} />
-            <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} bottomValue={-40} rightValue={45} />
 
             <StatusBar hidden={true} />
         </SafeAreaView>

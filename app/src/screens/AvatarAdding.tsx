@@ -13,6 +13,7 @@ import Button from "../components/Button";
 import { RootParamList } from "../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { useUserRegistration } from "../hooks/UserContext";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
@@ -34,6 +35,10 @@ export default function AvatarAdding() {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
+            setUserData((previous) => ({
+                ...previous,
+                profileImage: result.assets[0].uri
+            }));
         }
     }
 
@@ -51,6 +56,8 @@ export default function AvatarAdding() {
         require("../../../assets/images/avatars/Avatar-11.png"),
         require("../../../assets/images/avatars/Avatar-12.png"),
     ];
+
+    const { userData, setUserData } = useUserRegistration();
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -77,7 +84,7 @@ export default function AvatarAdding() {
                                 {image ? (
                                     <Image source={{ uri: image }} className="h-full w-full rounded-full" resizeMode="cover" />
                                 ) : (
-                                    <SvgUri height="100%" width="100%" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
+                                    <SvgUri height="70%" width="70%" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
                                 )}
                             </Pressable>
                         </View>
@@ -103,7 +110,12 @@ export default function AvatarAdding() {
                                         className="h-28 w-28 mx-2 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 overflow-hidden rounded-full p-1"
                                         onPress={() => {
                                             setImage(Image.resolveAssetSource(item).uri);
-                                        }}>
+                                            setUserData((previous) => ({
+                                                ...previous,
+                                                profileImage: Image.resolveAssetSource(item).uri
+                                            }));
+                                        }}
+                                    >
                                         <Image source={item} className="h-full w-full rounded-full" resizeMode="cover" />
                                     </TouchableOpacity>
                                 )}
@@ -115,7 +127,16 @@ export default function AvatarAdding() {
                             <Pressable className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3">
                                 <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
                             </Pressable>
-                            <Button name="Next" onPress={() => { navigator.replace("Home") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button
+                                name="Next"
+                                onPress={() => {
+                                    console.log(userData);
+                                    navigator.replace("Home");
+                                }}
+                                containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
+                                textClass="text-white dark:text-black"
+                                showIcon={true}
+                            />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>

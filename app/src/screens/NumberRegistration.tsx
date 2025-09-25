@@ -3,7 +3,6 @@ import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgUri } from "react-native-svg";
-import CircleShape from "../components/CircleShape";
 import { StatusBar } from "expo-status-bar";
 import { TextInput } from "react-native-paper";
 import { useTheme } from "../theme/ThemeProvider";
@@ -12,6 +11,7 @@ import CountryPicker, { Country, CountryCode } from "react-native-country-picker
 import { RootParamList } from "../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { useUserRegistration } from "../hooks/UserContext";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "AvatarAdding">;
 
@@ -21,6 +21,8 @@ export default function NumberRegistration() {
 
     const { applied } = useTheme();
 
+    const [callingCode, setCallingCode] = useState("+94");
+
     const [mobile, setMobile] = useState('');
 
     const [show, setShow] = useState<boolean>(false);
@@ -28,6 +30,8 @@ export default function NumberRegistration() {
     const [countryCode, setCountryCode] = useState<CountryCode>("LK");
 
     const [country, setCountry] = useState<Country | null>(null);
+
+    const { userData, setUserData } = useUserRegistration();
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -75,7 +79,7 @@ export default function NumberRegistration() {
                             <View className="h-auto w-[30%] flex justify-center items-center">
                                 <TextInput
                                     label="Contry Code"
-                                    value={country ? `+${country.callingCode}` : `+94`}
+                                    value={country ? `+${country.callingCode}` : callingCode}
                                     editable={false}
                                     mode="outlined"
                                     textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
@@ -114,14 +118,25 @@ export default function NumberRegistration() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Button name="Next" onPress={() => { navigator.replace("AvatarAdding") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                            <Button
+                                name="Next"
+                                onPress={() => {
+                                    setUserData((previous) => ({
+                                        ...previous,
+                                        countryCode: country ? `+${country.callingCode}` : callingCode,
+                                        mobile: mobile
+                                    }))
+
+                                    navigator.replace("AvatarAdding");
+                                }}
+                                containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
+                                textClass="text-white dark:text-black"
+                                showIcon={true}
+                            />
                         </View>
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
-
-            <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} bottomValue={-30} rightValue={-95} />
-            <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} bottomValue={-40} rightValue={45} />
 
             <StatusBar hidden={true} />
         </SafeAreaView>
