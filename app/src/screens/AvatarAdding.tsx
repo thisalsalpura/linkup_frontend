@@ -7,7 +7,7 @@ import { SvgUri } from "react-native-svg";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCamera, faUser } from "@fortawesome/free-regular-svg-icons";
+import { faCamera } from "@fortawesome/free-regular-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useTheme } from "../theme/ThemeProvider";
 
@@ -51,11 +51,11 @@ export default function AvatarAdding() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-row justify-center items-center">
-                            <Pressable className="relative h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed rounded-full p-1">
+                            <Pressable className="relative h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed object-cover overflow-hidden rounded-full p-1">
                                 {image ? (
                                     <Image source={{ uri: image }} className="h-full w-full rounded-full" />
                                 ) : (
-                                    <SvgUri className="h-full w-full" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
+                                    <SvgUri height={100} width={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
                                 )}
                             </Pressable>
                         </View>
