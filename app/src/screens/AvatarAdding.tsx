@@ -52,17 +52,16 @@ export default function AvatarAdding() {
 
                         <View className="mt-10 h-auto w-full flex flex-row justify-center items-center">
                             <Pressable className="relative h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed rounded-full p-1">
-                                {image && (
+                                {image ? (
                                     <Image source={{ uri: image }} className="h-full w-full rounded-full" />
+                                ) : (
+                                    <SvgUri className="h-full w-full" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
                                 )}
-                                <View className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 h-12 w-12 bg-[#1C1C21] dark:bg-white flex justify-center items-center border-2 border-gray-400 border-dashed rounded-full">
-                                    <FontAwesomeIcon icon={faUser as IconProp} color={applied === "dark" ? "#000000" : "#FFFFFF"} size={18} />
-                                </View>
                             </Pressable>
                         </View>
 
                         <View className="mt-10 h-auto w-full flex justify-center items-center">
-                            <Pressable className="h-auto w-full bg-[#1C1C21] dark:bg-white flex flex-col justify-center items-center border-2 border-gray-400 border-dashed rounded-[10px] p-5 gap-4">
+                            <Pressable className="h-auto w-full bg-[#1C1C21] dark:bg-white flex flex-col justify-center items-center border-2 border-gray-400 border-dashed rounded-[10px] p-5 gap-4" onPress={pickImage}>
                                 <FontAwesomeIcon icon={faCamera as IconProp} color={applied === "dark" ? "#000000" : "#FFFFFF"} size={34} />
                                 <Text className="text-white dark:text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Choose a Profile Picture</Text>
                             </Pressable>
