@@ -1,17 +1,24 @@
-import { Image, KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
+import React, { useState } from "react";
+import { FlatList, Image, KeyboardAvoidingView, Platform, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CircleShape from "../components/CircleShape";
 import { StatusBar } from "expo-status-bar";
 import { SvgUri } from "react-native-svg";
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCamera } from "@fortawesome/free-regular-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useTheme } from "../theme/ThemeProvider";
+import Button from "../components/Button";
+import { RootParamList } from "../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
 export default function AvatarAdding() {
+
+    const navigator = useNavigation<NavigationProps>();
 
     const { applied } = useTheme();
 
@@ -29,6 +36,21 @@ export default function AvatarAdding() {
             setImage(result.assets[0].uri);
         }
     }
+
+    const avatars = [
+        require("../../../assets/images/avatars/Avatar-01.png"),
+        require("../../../assets/images/avatars/Avatar-02.png"),
+        require("../../../assets/images/avatars/Avatar-03.png"),
+        require("../../../assets/images/avatars/Avatar-04.png"),
+        require("../../../assets/images/avatars/Avatar-05.png"),
+        require("../../../assets/images/avatars/Avatar-06.png"),
+        require("../../../assets/images/avatars/Avatar-07.png"),
+        require("../../../assets/images/avatars/Avatar-08.png"),
+        require("../../../assets/images/avatars/Avatar-09.png"),
+        require("../../../assets/images/avatars/Avatar-10.png"),
+        require("../../../assets/images/avatars/Avatar-11.png"),
+        require("../../../assets/images/avatars/Avatar-12.png"),
+    ];
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
@@ -51,11 +73,11 @@ export default function AvatarAdding() {
                         </View>
 
                         <View className="mt-10 h-auto w-full flex flex-row justify-center items-center">
-                            <Pressable className="relative h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed object-cover overflow-hidden rounded-full p-1">
+                            <Pressable className="h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed overflow-hidden rounded-full p-1">
                                 {image ? (
-                                    <Image source={{ uri: image }} className="h-full w-full rounded-full" />
+                                    <Image source={{ uri: image }} className="h-full w-full rounded-full" resizeMode="cover" />
                                 ) : (
-                                    <SvgUri height={100} width={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
+                                    <SvgUri height="100%" width="100%" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
                                 )}
                             </Pressable>
                         </View>
@@ -70,12 +92,34 @@ export default function AvatarAdding() {
                         <View className="mt-10 h-auto w-full flex justify-center items-center">
                             <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Or you can choose a Avatar!</Text>
                         </View>
+
+                        <View className="mt-10 h-auto w-full flex justify-center items-center">
+                            <FlatList
+                                data={avatars}
+                                horizontal
+                                keyExtractor={(_, index) => index.toString()}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        className="h-28 w-28 mx-2 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 overflow-hidden rounded-full p-1"
+                                        onPress={() => {
+                                            setImage(Image.resolveAssetSource(item).uri);
+                                        }}>
+                                        <Image source={item} className="h-full w-full rounded-full" resizeMode="cover" />
+                                    </TouchableOpacity>
+                                )}
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+
+                        <View className="mt-16 h-auto w-full flex flex-col justify-center items-center gap-8">
+                            <Pressable className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3">
+                                <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
+                            </Pressable>
+                            <Button name="Next" onPress={() => { navigator.replace("Home") }} containerClass="bg-black dark:bg-white border-2 border-black dark:border-white" textClass="text-white dark:text-black" showIcon={true} />
+                        </View>
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
-
-            {/* <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} bottomValue={-30} rightValue={-95} />
-            <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} bottomValue={-40} rightValue={45} /> */}
 
             <StatusBar hidden={true} />
         </SafeAreaView>
