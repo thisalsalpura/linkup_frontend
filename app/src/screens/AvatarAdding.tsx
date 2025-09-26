@@ -14,6 +14,8 @@ import { RootParamList } from "../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useUserRegistration } from "../hooks/UserContext";
+import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
+import { validateProfileImage } from "../util/Validation";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
@@ -60,89 +62,110 @@ export default function AvatarAdding() {
     const { userData, setUserData } = useUserRegistration();
 
     return (
-        <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
-            <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
-                <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
-                    <View className="flex-1 w-full justify-start items-center px-8 py-12">
-                        <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
-                            <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
-                        </View>
+        <AlertNotificationRoot
+            theme={applied === "dark" ? "light" : "dark"}
+            toastConfig={{
+                titleStyle: { fontFamily: "EncodeSansCondensedBold", fontSize: 18 },
+                textBodyStyle: { fontFamily: "EncodeSansCondensedMedium", fontSize: 14 },
+            }}
+        >
+            <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
+                <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
+                    <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
+                        <View className="flex-1 w-full justify-start items-center px-8 py-12">
+                            <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
+                                <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
+                                <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
+                            </View>
 
-                        <View className="mt-10 h-auto w-full flex justify-center items-center">
-                            <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Let's add Profile Image!</Text>
-                        </View>
+                            <View className="mt-10 h-auto w-full flex justify-center items-center">
+                                <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Let's add Profile Image!</Text>
+                            </View>
 
-                        <View className="mt-10 h-auto w-full flex justify-center items-start">
-                            <View className="h-auto w-auto bg-sand-400 rounded-full px-4 py-2">
-                                <Text className="text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Step 4</Text>
+                            <View className="mt-10 h-auto w-full flex justify-center items-start">
+                                <View className="h-auto w-auto bg-sand-400 rounded-full px-4 py-2">
+                                    <Text className="text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Step 4</Text>
+                                </View>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex flex-row justify-center items-center">
+                                <Pressable className="h-44 w-44 bg-black dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed overflow-hidden rounded-full p-1">
+                                    {image ? (
+                                        <Image source={{ uri: image }} className="h-full w-full rounded-full" resizeMode="cover" />
+                                    ) : (
+                                        <SvgUri height="70%" width="70%" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
+                                    )}
+                                </Pressable>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex justify-center items-center">
+                                <Pressable className="h-auto w-full bg-black dark:bg-white flex flex-col justify-center items-center border-2 border-gray-400 border-dashed rounded-[10px] p-5 gap-4" onPress={pickImage}>
+                                    <FontAwesomeIcon icon={faCamera as IconProp} color={applied === "dark" ? "#000000" : "#FFFFFF"} size={34} />
+                                    <Text className="text-white dark:text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Choose a Profile Picture</Text>
+                                </Pressable>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex justify-center items-center">
+                                <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Or you can choose a Avatar!</Text>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex justify-center items-center">
+                                <FlatList
+                                    data={avatars}
+                                    horizontal
+                                    keyExtractor={(_, index) => index.toString()}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            className="h-28 w-28 mx-2 bg-black dark:bg-white justify-center items-center border-2 border-gray-400 overflow-hidden rounded-full p-1"
+                                            onPress={() => {
+                                                setImage(Image.resolveAssetSource(item).uri);
+                                                setUserData((previous) => ({
+                                                    ...previous,
+                                                    profileImage: Image.resolveAssetSource(item).uri
+                                                }));
+                                            }}
+                                        >
+                                            <Image source={item} className="h-full w-full rounded-full" resizeMode="cover" />
+                                        </TouchableOpacity>
+                                    )}
+                                    showsHorizontalScrollIndicator={false}
+                                />
+                            </View>
+
+                            <View className="mt-16 h-auto w-full flex flex-col justify-center items-center gap-8">
+                                <Pressable className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3">
+                                    <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
+                                </Pressable>
+                                <Button
+                                    name="Next"
+                                    onPress={() => {
+                                        const validProfileImage = validateProfileImage(
+                                            userData.profileImage
+                                                ? { uri: userData.profileImage, type: "", fileSize: 0 }
+                                                : null
+                                        )
+
+                                        if (validProfileImage) {
+                                            Toast.show({
+                                                type: ALERT_TYPE.WARNING,
+                                                title: 'Warning',
+                                                textBody: validProfileImage,
+                                            });
+                                        } else {
+                                            navigator.replace("Home");
+                                        }
+                                    }}
+                                    containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
+                                    textClass="text-white dark:text-black"
+                                    showIcon={true}
+                                />
                             </View>
                         </View>
+                    </KeyboardAwareScrollView>
+                </KeyboardAvoidingView>
 
-                        <View className="mt-10 h-auto w-full flex flex-row justify-center items-center">
-                            <Pressable className="h-44 w-44 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 border-dashed overflow-hidden rounded-full p-1">
-                                {image ? (
-                                    <Image source={{ uri: image }} className="h-full w-full rounded-full" resizeMode="cover" />
-                                ) : (
-                                    <SvgUri height="70%" width="70%" uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/images/user.svg"} />
-                                )}
-                            </Pressable>
-                        </View>
-
-                        <View className="mt-10 h-auto w-full flex justify-center items-center">
-                            <Pressable className="h-auto w-full bg-[#1C1C21] dark:bg-white flex flex-col justify-center items-center border-2 border-gray-400 border-dashed rounded-[10px] p-5 gap-4" onPress={pickImage}>
-                                <FontAwesomeIcon icon={faCamera as IconProp} color={applied === "dark" ? "#000000" : "#FFFFFF"} size={34} />
-                                <Text className="text-white dark:text-black text-lg font-EncodeSansCondensedMedium tracking-widest">Choose a Profile Picture</Text>
-                            </Pressable>
-                        </View>
-
-                        <View className="mt-10 h-auto w-full flex justify-center items-center">
-                            <Text className="text-black dark:text-white text-lg font-EncodeSansCondensedMedium tracking-widest">Or you can choose a Avatar!</Text>
-                        </View>
-
-                        <View className="mt-10 h-auto w-full flex justify-center items-center">
-                            <FlatList
-                                data={avatars}
-                                horizontal
-                                keyExtractor={(_, index) => index.toString()}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        className="h-28 w-28 mx-2 bg-[#1C1C21] dark:bg-white justify-center items-center border-2 border-gray-400 overflow-hidden rounded-full p-1"
-                                        onPress={() => {
-                                            setImage(Image.resolveAssetSource(item).uri);
-                                            setUserData((previous) => ({
-                                                ...previous,
-                                                profileImage: Image.resolveAssetSource(item).uri
-                                            }));
-                                        }}
-                                    >
-                                        <Image source={item} className="h-full w-full rounded-full" resizeMode="cover" />
-                                    </TouchableOpacity>
-                                )}
-                                showsHorizontalScrollIndicator={false}
-                            />
-                        </View>
-
-                        <View className="mt-16 h-auto w-full flex flex-col justify-center items-center gap-8">
-                            <Pressable className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3">
-                                <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
-                            </Pressable>
-                            <Button
-                                name="Next"
-                                onPress={() => {
-                                    console.log(userData);
-                                    navigator.replace("Home");
-                                }}
-                                containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
-                                textClass="text-white dark:text-black"
-                                showIcon={true}
-                            />
-                        </View>
-                    </View>
-                </KeyboardAwareScrollView>
-            </KeyboardAvoidingView>
-
-            <StatusBar hidden={true} />
-        </SafeAreaView>
+                <StatusBar hidden={true} />
+            </SafeAreaView>
+        </AlertNotificationRoot>
     );
 }

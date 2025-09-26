@@ -15,7 +15,7 @@ export const validateLname = (name: string): string | null => {
 export const validateMobile = (mobile: string): string | null => {
     const regex = /^[1-9][0-9]{6,14}$/;
 
-    if (!mobile) {
+    if (!mobile || mobile.trim().length === 0) {
         return "Mobile Number is Required!";
     }
 

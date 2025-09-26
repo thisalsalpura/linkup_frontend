@@ -12,7 +12,6 @@ import Home from "./screens/Home";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
-import ToastManager from "toastify-react-native/components/ToastManager";
 import "./global.css";
 
 export type RootParamList = {
@@ -69,10 +68,6 @@ export default function App() {
               <Stack.Screen name="Home" component={Home} />
             </Stack.Navigator>
           </NavigationContainer>
-          <ToastManager
-            style={{ backgroundColor: "#333" }}
-            textStyle={{ fontSize: 16, color: "white" }}
-          />
         </PaperProvider>
       </UserRegistrationProvider>
     </ThemeProvider>
