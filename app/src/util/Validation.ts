@@ -12,6 +12,20 @@ export const validateLname = (name: string): string | null => {
     return null;
 }
 
+export const validateCountryCode = (countryCode: string): string | null => {
+    const regex = /^\+[1-9]\d{0,3}$/;
+
+    if (!countryCode) {
+        return "Country Code is Required!";
+    }
+
+    if (!regex.test(countryCode)) {
+        return "Enter a valid Country Code!";
+    }
+
+    return null;
+}
+
 export const validateMobile = (mobile: string): string | null => {
     const regex = /^[1-9][0-9]{6,14}$/;
 

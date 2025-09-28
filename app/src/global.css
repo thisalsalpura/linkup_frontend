@@ -15,3 +15,12 @@
         @apply relative inline-flex rounded-full h-4 w-4 bg-sand-400;
     }
 }
+
+.bg-blur {
+    inset: 0;
+    background-color: #ffffffa0;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    transition: 250ms;
+    transform-style: preserve-3d;
+}

@@ -14,7 +14,7 @@ import { useUserRegistration } from "../hooks/UserContext";
 import { validateFname, validateLname } from "../util/Validation";
 import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
 
-type NavigationProps = NativeStackNavigationProp<RootParamList, "NumberRegistration">;
+type NavigationProps = NativeStackNavigationProp<RootParamList, "SignUp">;
 
 export default function SignUp() {
 

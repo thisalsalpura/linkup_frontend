@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useTheme } from "../theme/ThemeProvider";
 
-type NavigationProps = NativeStackNavigationProp<RootParamList>;
+type NavigationProps = NativeStackNavigationProp<RootParamList, "Splash">;
 
 export default function Splash() {
 

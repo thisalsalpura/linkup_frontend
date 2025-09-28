@@ -13,9 +13,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useUserRegistration } from "../hooks/UserContext";
 import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
-import { validateMobile } from "../util/Validation";
+import { validateCountryCode, validateMobile } from "../util/Validation";
 
-type NavigationProps = NativeStackNavigationProp<RootParamList, "AvatarAdding">;
+type NavigationProps = NativeStackNavigationProp<RootParamList, "NumberRegistration">;
 
 export default function NumberRegistration() {
 
@@ -130,9 +130,16 @@ export default function NumberRegistration() {
                                 <Button
                                     name="Next"
                                     onPress={() => {
+                                        const validCountryCode = validateCountryCode(country ? `+${country.callingCode}` : callingCode);
                                         const validMobile = validateMobile(mobile);
 
-                                        if (validMobile) {
+                                        if (validCountryCode) {
+                                            Toast.show({
+                                                type: ALERT_TYPE.WARNING,
+                                                title: 'Warning',
+                                                textBody: validCountryCode,
+                                            });
+                                        } if (validMobile) {
                                             Toast.show({
                                                 type: ALERT_TYPE.WARNING,
                                                 title: 'Warning',

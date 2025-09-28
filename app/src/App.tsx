@@ -59,7 +59,7 @@ export default function App() {
           }}
         >
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Splash" screenOptions={{ animation: "fade", headerShown: false }}>
+            <Stack.Navigator initialRouteName="Home" screenOptions={{ animation: "fade", headerShown: false }}>
               <Stack.Screen name="Splash" component={Splash} />
               <Stack.Screen name="SignIn" component={SignIn} />
               <Stack.Screen name="SignUp" component={SignUp} />

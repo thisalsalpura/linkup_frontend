@@ -16,14 +16,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useUserRegistration } from "../hooks/UserContext";
 import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
 import { validateProfileImage } from "../util/Validation";
+import { createNewAccount } from "../api/CreateNewAccount";
+import Loader from "../components/Loader";
 
-type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
+type NavigationProps = NativeStackNavigationProp<RootParamList, "AvatarAdding">;
 
 export default function AvatarAdding() {
 
     const navigator = useNavigation<NavigationProps>();
 
     const { applied } = useTheme();
+
+    const [loading, setLoading] = useState(false);
 
     const [image, setImage] = useState<string | null>(null);
 
@@ -70,6 +74,12 @@ export default function AvatarAdding() {
             }}
         >
             <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
+                {loading && (
+                    <View className="absolute inset-0 bg-blur justify-center items-center z-50">
+                        <Loader />
+                    </View>
+                )}
+
                 <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
                     <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
                         <View className="flex-1 w-full justify-start items-center px-8 py-12">
@@ -133,17 +143,48 @@ export default function AvatarAdding() {
                             </View>
 
                             <View className="mt-16 h-auto w-full flex flex-col justify-center items-center gap-8">
-                                <Pressable className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3">
+                                <Pressable
+                                    className="h-auto w-auto bg-sand-400 rounded-full px-6 py-3"
+                                    onPress={async () => {
+                                        try {
+                                            setLoading(true);
+
+                                            const response = await createNewAccount(userData, "WITHOUT_PROFILE_IMG");
+
+                                            if (response.status) {
+                                                Toast.show({
+                                                    type: ALERT_TYPE.SUCCESS,
+                                                    title: 'Success',
+                                                    textBody: response.message,
+                                                });
+
+                                                setTimeout(() => {
+                                                    navigator.replace("Home");
+                                                }, 2000);
+                                            } else {
+                                                Toast.show({
+                                                    type: ALERT_TYPE.WARNING,
+                                                    title: 'Warning',
+                                                    textBody: response.message,
+                                                });
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            setLoading(false);
+                                        }
+                                    }}
+                                >
                                     <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
                                 </Pressable>
                                 <Button
                                     name="Next"
-                                    onPress={() => {
+                                    onPress={async () => {
                                         const validProfileImage = validateProfileImage(
                                             userData.profileImage
                                                 ? { uri: userData.profileImage, type: "", fileSize: 0 }
                                                 : null
-                                        )
+                                        );
 
                                         if (validProfileImage) {
                                             Toast.show({
@@ -152,7 +193,33 @@ export default function AvatarAdding() {
                                                 textBody: validProfileImage,
                                             });
                                         } else {
-                                            navigator.replace("Home");
+                                            try {
+                                                setLoading(true);
+
+                                                const response = await createNewAccount(userData, "WITH_PROFILE_IMG");
+
+                                                if (response.status) {
+                                                    Toast.show({
+                                                        type: ALERT_TYPE.SUCCESS,
+                                                        title: 'Success',
+                                                        textBody: response.message,
+                                                    });
+
+                                                    setTimeout(() => {
+                                                        navigator.replace("Home");
+                                                    }, 2000);
+                                                } else {
+                                                    Toast.show({
+                                                        type: ALERT_TYPE.WARNING,
+                                                        title: 'Warning',
+                                                        textBody: response.message,
+                                                    });
+                                                }
+                                            } catch (error) {
+                                                console.error(error);
+                                            } finally {
+                                                setLoading(false);
+                                            }
                                         }
                                     }}
                                     containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
