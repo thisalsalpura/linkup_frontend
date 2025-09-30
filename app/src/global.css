@@ -18,9 +18,20 @@
 
 .bg-blur {
     inset: 0;
-    background-color: #ffffffa0;
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     transition: 250ms;
     transform-style: preserve-3d;
+}
+
+.loading-bg-blur {
+    background-color: #ffffffa0;
+}
+
+.chats-bg-blur-dark {
+    background-color: #0000001a;
+}
+
+.chats-bg-blur-light {
+    background-color: #ffffff1a;
 }

@@ -75,7 +75,7 @@ export default function AvatarAdding() {
         >
             <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
                 {loading && (
-                    <View className="absolute inset-0 bg-blur justify-center items-center z-50">
+                    <View className="absolute inset-0 bg-blur loading-bg-blur justify-center items-center z-50">
                         <Loader />
                     </View>
                 )}

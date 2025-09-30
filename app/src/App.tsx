@@ -12,6 +12,7 @@ import Home from "./screens/Home";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
+import { WebSocketProvider } from "./web_socket/WebSocketProvider";
 import "./global.css";
 
 export type RootParamList = {
@@ -34,42 +35,44 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-      <UserRegistrationProvider>
-        <PaperProvider
-          theme={{
-            roundness: 10,
-            fonts: {
-              bodyLarge: { fontFamily: "EncodeSansCondensedMedium" },
-              bodyMedium: { fontFamily: "EncodeSansCondensedMedium" },
-              bodySmall: { fontFamily: "EncodeSansCondensedMedium" },
-              labelLarge: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
-              labelMedium: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
-              labelSmall: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
-              titleLarge: { fontFamily: "EncodeSansCondensedBold" },
-              titleMedium: { fontFamily: "EncodeSansCondensedBold" },
-              titleSmall: { fontFamily: "EncodeSansCondensedBold" },
-              headlineLarge: { fontFamily: "EncodeSansCondensedBold" },
-              headlineMedium: { fontFamily: "EncodeSansCondensedBold" },
-              headlineSmall: { fontFamily: "EncodeSansCondensedBold" },
-              displayLarge: { fontFamily: "EncodeSansCondensedBold" },
-              displayMedium: { fontFamily: "EncodeSansCondensedBold" },
-              displaySmall: { fontFamily: "EncodeSansCondensedBold" }
-            }
-          }}
-        >
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home" screenOptions={{ animation: "fade", headerShown: false }}>
-              <Stack.Screen name="Splash" component={Splash} />
-              <Stack.Screen name="SignIn" component={SignIn} />
-              <Stack.Screen name="SignUp" component={SignUp} />
-              <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
-              <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
-              <Stack.Screen name="Home" component={Home} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </PaperProvider>
-      </UserRegistrationProvider>
-    </ThemeProvider>
+    <WebSocketProvider userId={1}>
+      <ThemeProvider>
+        <UserRegistrationProvider>
+          <PaperProvider
+            theme={{
+              roundness: 10,
+              fonts: {
+                bodyLarge: { fontFamily: "EncodeSansCondensedMedium" },
+                bodyMedium: { fontFamily: "EncodeSansCondensedMedium" },
+                bodySmall: { fontFamily: "EncodeSansCondensedMedium" },
+                labelLarge: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
+                labelMedium: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
+                labelSmall: { fontSize: 18, fontFamily: "EncodeSansCondensedMedium" },
+                titleLarge: { fontFamily: "EncodeSansCondensedBold" },
+                titleMedium: { fontFamily: "EncodeSansCondensedBold" },
+                titleSmall: { fontFamily: "EncodeSansCondensedBold" },
+                headlineLarge: { fontFamily: "EncodeSansCondensedBold" },
+                headlineMedium: { fontFamily: "EncodeSansCondensedBold" },
+                headlineSmall: { fontFamily: "EncodeSansCondensedBold" },
+                displayLarge: { fontFamily: "EncodeSansCondensedBold" },
+                displayMedium: { fontFamily: "EncodeSansCondensedBold" },
+                displaySmall: { fontFamily: "EncodeSansCondensedBold" }
+              }
+            }}
+          >
+            <NavigationContainer>
+              <Stack.Navigator initialRouteName="Home" screenOptions={{ animation: "fade", headerShown: false }}>
+                <Stack.Screen name="Splash" component={Splash} />
+                <Stack.Screen name="SignIn" component={SignIn} />
+                <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
+                <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
+                <Stack.Screen name="Home" component={Home} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </PaperProvider>
+        </UserRegistrationProvider>
+      </ThemeProvider>
+    </WebSocketProvider>
   );
 }
