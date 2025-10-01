@@ -9,6 +9,7 @@ import NumberRegistration from "./screens/NumberRegistration";
 import AvatarAdding from "./screens/AvatarAdding";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
+import SingleChatScreen from "./screens/SingleChatScreen";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
@@ -22,6 +23,12 @@ export type RootParamList = {
   NumberRegistration: undefined;
   AvatarAdding: undefined;
   Home: undefined;
+  SingleChatScreen: {
+    friendId: number;
+    friendFname: string;
+    friendLname: string;
+    profileImage: string;
+  };
 }
 
 export default function App() {
@@ -68,6 +75,7 @@ export default function App() {
                 <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
                 <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
                 <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </PaperProvider>

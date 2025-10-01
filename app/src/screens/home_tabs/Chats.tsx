@@ -32,7 +32,14 @@ export default function Chats() {
     });
 
     const renderItem = ({ item }: any) => (
-        <TouchableOpacity className="h-auto w-full bg-blur justify-start items-center rounded-2xl" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }}>
+        <TouchableOpacity className="h-auto w-full bg-blur justify-start items-center rounded-2xl" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }} onPress={() => {
+            navigator.navigate("SingleChatScreen", {
+                friendId: item.friendId,
+                friendFname: item.friendFname,
+                friendLname: item.friendLname,
+                profileImage: item.profileImage
+            });
+        }}>
             <View className="h-auto w-full flex flex-row justify-between items-center p-2.5 gap-5">
                 <View className="flex-1 flex flex-row justify-start items-center gap-5">
                     <View className="h-16 w-16 border border-black dark:border-white flex justify-center items-center p-0.5 rounded-full overflow-hidden flex-shrink-0">
@@ -66,7 +73,7 @@ export default function Chats() {
             <Header />
 
             <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
-                <KeyboardAwareFlatList className="flex-1 bg-white dark:bg-[#1C1C21] px-6 py-6" data={filteredChats} contentContainerStyle={{ gap: 8, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled"
+                <KeyboardAwareFlatList className="flex-1 bg-white dark:bg-[#1C1C21] px-6 py-6" data={filteredChats} contentContainerStyle={{ gap: 8, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}
                     ListHeaderComponent={
                         <View className="mb-5 h-auto w-full flex justify-start items-center">
                             <View className="h-auto w-full flex justify-center items-center">
