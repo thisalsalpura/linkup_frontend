@@ -18,7 +18,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode; userId: nu
     useEffect(() => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) return;
 
-        const socket = new WebSocket(`${process.env.EXPO_PUBLIC_APP_WSS_URL}/linkup_backend/Chat?userId=${userId}`);
+        const socket = new WebSocket(`${process.env.EXPO_PUBLIC_APP_WSS_URL}/linkup_backend/ChatProcesses?userId=${userId}`);
 
         socketRef.current = socket;
 

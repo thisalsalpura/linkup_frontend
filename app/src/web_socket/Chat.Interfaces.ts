@@ -5,21 +5,23 @@ export interface User {
     countryCode: string;
     mobile: string;
     profileImage?: string;
+    status: string;
 }
 
 export interface Chat {
     friendId: number;
-    friendName: string;
+    friendFname: string;
+    friendLname: string;
     lastMessage: string;
     lastMessageTimeStamp: string;
     unreadMessageCount: string;
     profileImage: string;
     from: User;
     to: User;
+    message: string;
     createdAt: string;
     updatedAt: string;
     status: string;
-    message: string;
 }
 
 export interface WSRequest {
@@ -31,5 +33,5 @@ export interface WSRequest {
 
 export interface WSResponse {
     type: string;
-    payload: any;
+    data_set: any;
 }

@@ -10,46 +10,10 @@ import Header from "../../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCalendarPlus } from "@fortawesome/free-regular-svg-icons";
+import { useChatList } from "../../web_socket/services/UseChatList";
+import { formatDateTime } from "../../util/DateFormatter";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
-
-const chats = [
-    {
-        id: 1,
-        name: "Sahan Perera",
-        lastMessage: "Hello, Kamal",
-        time: "9:46 PM",
-        unread: 2,
-        profile: require("../../../../assets/images/avatars/Avatar-01.png")
-    },
-
-    {
-        id: 2,
-        name: "Amal Silva",
-        lastMessage: "Hello, Amal",
-        time: "Yesterday",
-        unread: 8,
-        profile: require("../../../../assets/images/avatars/Avatar-02.png")
-    },
-
-    {
-        id: 3,
-        name: "Hashen Soysa",
-        lastMessage: "Hello, Hashen. If you're free today? I go to watch the SL VS AUS cricket match.",
-        time: "2:32 pm",
-        unread: 2,
-        profile: require("../../../../assets/images/avatars/Avatar-03.png")
-    },
-
-    {
-        id: 4,
-        name: "Nayani De Silva",
-        lastMessage: "Hello, Nayani",
-        time: "2025/07/03",
-        unread: 2,
-        profile: require("../../../../assets/images/avatars/Avatar-04.png")
-    },
-];
 
 export default function Chats() {
 
@@ -57,11 +21,13 @@ export default function Chats() {
 
     const { applied } = useTheme();
 
+    const chatList = useChatList();
+
     const [search, setSearch] = useState('');
 
-    const filteredChats = chats.filter((chat) => {
+    const filteredChats = chatList.filter((chat) => {
         return (
-            chat.name.toLowerCase().includes(search.toLowerCase()) || chat.lastMessage.toLowerCase().includes(search.toLowerCase())
+            chat.friendFname.toLowerCase().includes(search.toLowerCase()) || chat.friendLname.toLowerCase().includes(search.toLowerCase())
         );
     });
 
@@ -70,19 +36,25 @@ export default function Chats() {
             <View className="h-auto w-full flex flex-row justify-between items-center p-2.5 gap-5">
                 <View className="flex-1 flex flex-row justify-start items-center gap-5">
                     <View className="h-16 w-16 border border-black dark:border-white flex justify-center items-center p-0.5 rounded-full overflow-hidden flex-shrink-0">
-                        <Image source={item.profile} className="h-full w-full rounded-full" resizeMode="cover" />
+                        {item.profileImage ? (
+                            <Image source={{ uri: item.profileImage }} className="h-full w-full rounded-full" resizeMode="cover" />
+                        ) : (
+                            <View className="h-full w-full bg-sand-400 flex justify-center items-center rounded-full">
+                                <Text className="text-2xl text-center text-black font-EncodeSansCondensedBold tracking-widest">{item.friendFname[0]}{item.friendLname[0]}</Text>
+                            </View>
+                        )}
                     </View>
 
                     <View className="flex-1 flex flex-col justify-center items-start gap-2">
-                        <Text className="text-lg text-left text-black dark:text-white font-EncodeSansCondensedSemiBold" numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                        <Text className="text-lg text-left text-black dark:text-white font-EncodeSansCondensedSemiBold" numberOfLines={1} ellipsizeMode="tail">{item.friendFname + " " + item.friendLname} </Text>
                         <Text className="text-left text-black dark:text-white font-EncodeSansCondensedMedium" numberOfLines={1} ellipsizeMode="tail">{item.lastMessage}</Text>
                     </View>
                 </View>
 
                 <View className="h-auto w-auto flex flex-col justify-center items-end gap-2 flex-shrink-0">
-                    <Text className="text-right text-gray-400 font-EncodeSansCondensedMedium">{item.time}</Text>
+                    <Text className="text-right text-gray-400 font-EncodeSansCondensedMedium">{formatDateTime(item.lastMessageTimeStamp)}</Text>
                     <View className="h-6 w-6 flex justify-center items-center bg-sand-300 rounded-full">
-                        <Text className="text-xs text-center text-black font-EncodeSansCondensedMedium">{item.unread}</Text>
+                        <Text className="text-xs text-center text-black font-EncodeSansCondensedMedium">{item.unreadMessageCount}</Text>
                     </View>
                 </View>
             </View>
@@ -119,14 +91,16 @@ export default function Chats() {
                     }
                     renderItem={renderItem}
                     ListEmptyComponent={
-                        <View />
+                        <TouchableOpacity className="h-auto w-full bg-blur justify-center items-center rounded-2xl p-6" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }}>
+                            <Text className="text-xl text-center text-black dark:text-white font-EncodeSansCondensedMedium">You didn't chat with anyone Yet!</Text>
+                        </TouchableOpacity>
                     }
                 />
             </KeyboardAvoidingView>
 
-            <View className="absolute bottom-4 right-4 h-16 w-16 bg-sand-400 rounded-2xl">
+            <View className="absolute bottom-4 right-4 h-16 w-16 bg-sand-400 border-2 border-sand-400 rounded-2xl">
                 <TouchableOpacity className="h-full w-full flex justify-center items-center">
-                    <FontAwesomeIcon icon={faCalendarPlus as IconProp} color="#000000" size={22} />
+                    <FontAwesomeIcon icon={faCalendarPlus as IconProp} color="#000000" size={24} />
                 </TouchableOpacity>
             </View>
         </>
