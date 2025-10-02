@@ -15,6 +15,7 @@ import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
 import { WebSocketProvider } from "./web_socket/WebSocketProvider";
 import "./global.css";
+import FriendContacts from "./screens/FriendContacts";
 
 export type RootParamList = {
   Splash: undefined;
@@ -29,6 +30,7 @@ export type RootParamList = {
     friendLname: string;
     profileImage: string;
   };
+  FriendContacts: undefined;
 }
 
 export default function App() {
@@ -76,6 +78,7 @@ export default function App() {
                 <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
+                <Stack.Screen name="FriendContacts" component={FriendContacts} />
               </Stack.Navigator>
             </NavigationContainer>
           </PaperProvider>

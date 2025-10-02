@@ -14,7 +14,7 @@ export interface Chat {
     friendLname: string;
     lastMessage: string;
     lastMessageTimeStamp: string;
-    unreadMessageCount: string;
+    unreadMessageCount: number;
     profileImage: string;
     from: User;
     to: User;

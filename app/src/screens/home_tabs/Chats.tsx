@@ -12,6 +12,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCalendarPlus } from "@fortawesome/free-regular-svg-icons";
 import { useChatList } from "../../web_socket/services/UseChatList";
 import { formatDateTime } from "../../util/DateFormatter";
+import Loader from "../../components/Loader";
+import { Chat } from "../../web_socket/Chat.Interfaces";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
@@ -21,7 +23,7 @@ export default function Chats() {
 
     const { applied } = useTheme();
 
-    const chatList = useChatList();
+    const { chatList, loading } = useChatList();
 
     const [search, setSearch] = useState('');
 
@@ -31,7 +33,7 @@ export default function Chats() {
         );
     });
 
-    const renderItem = ({ item }: any) => (
+    const renderItem = ({ item }: { item: Chat }) => (
         <TouchableOpacity className="h-auto w-full bg-blur justify-start items-center rounded-2xl" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }} onPress={() => {
             navigator.navigate("SingleChatScreen", {
                 friendId: item.friendId,
@@ -72,6 +74,12 @@ export default function Chats() {
 
     return (
         <>
+            {loading && (
+                <View className="absolute inset-0 bg-blur loading-bg-blur justify-center items-center z-50">
+                    <Loader />
+                </View>
+            )}
+
             <Header />
 
             <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
@@ -108,7 +116,7 @@ export default function Chats() {
             </KeyboardAvoidingView>
 
             <View className="absolute bottom-4 right-4 h-16 w-16 bg-sand-400 border-2 border-sand-400 rounded-2xl">
-                <TouchableOpacity className="h-full w-full flex justify-center items-center">
+                <TouchableOpacity className="h-full w-full flex justify-center items-center" onPress={() => navigator.navigate("FriendContacts")}>
                     <FontAwesomeIcon icon={faCalendarPlus as IconProp} color="#000000" size={24} />
                 </TouchableOpacity>
             </View>

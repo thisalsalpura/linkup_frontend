@@ -15,6 +15,7 @@ import { useSendChat } from "../web_socket/services/UseSendChat";
 import { useSingleChat } from "../web_socket/services/UseSingleChat";
 import { Chat } from "../web_socket/Chat.Interfaces";
 import { formatDateTime } from "../util/DateFormatter";
+import Loader from "../components/Loader";
 
 type NavigationProps = NativeStackScreenProps<RootParamList, "SingleChatScreen">;
 
@@ -28,7 +29,7 @@ export default function SingleChatScreen({ route }: NavigationProps) {
 
     const flatListRef = useRef<any>(null);
 
-    const messages = useSingleChat(friendId);
+    const { messages, loading } = useSingleChat(friendId);
 
     const [chatText, setChatText] = useState('');
 
@@ -99,6 +100,12 @@ export default function SingleChatScreen({ route }: NavigationProps) {
             }}
         >
             <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
+                {loading && (
+                    <View className="absolute inset-0 bg-blur loading-bg-blur justify-center items-center z-50">
+                        <Loader />
+                    </View>
+                )}
+
                 <View className="h-auto w-full bg-sand-400 flex flex-row justify-center items-center px-4 py-4 gap-6">
                     <View className="h-12 w-12 flex justify-center items-center border border-black rounded-full p-0.5 flex-shrink-0">
                         {profileImage ? (

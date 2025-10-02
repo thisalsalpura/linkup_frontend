@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useChatList(): Chat[] {
+export function useChatList(): { chatList: Chat[]; loading: boolean } {
 
     const { socket, sendMessage } = useWebSocket();
+
+    const [loading, setLoading] = useState(true);
 
     const [chatList, setChatList] = useState<Chat[]>([]);
 
@@ -13,12 +15,14 @@ export function useChatList(): Chat[] {
             return;
         }
 
+        setLoading(true);
         sendMessage({ type: "get_chat_list" });
 
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
             if (response.type === "friends_chat_list") {
                 setChatList(response.data_set);
+                setLoading(false);
             }
         };
 
@@ -29,5 +33,5 @@ export function useChatList(): Chat[] {
         }
     }, [socket]);
 
-    return chatList;
+    return { chatList, loading };
 }

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useSingleChat(friendId: number): { messages: Chat[]; loading: boolean } {
+export function useFriendList(): { friendList: Chat[]; loading: boolean } {
 
     const { socket, sendMessage } = useWebSocket();
 
     const [loading, setLoading] = useState(true);
 
-    const [messages, setMessages] = useState<Chat[]>([]);
+    const [friendList, setFriendList] = useState<Chat[]>([]);
 
     useEffect(() => {
         if (!socket) {
@@ -16,17 +16,13 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
         }
 
         setLoading(true);
-        sendMessage({ type: "get_single_chat", friendId });
+        sendMessage({ type: "get_friend_list" });
 
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
-            if (response.type === "single_chat") {
-                setMessages(response.data_set);
+            if (response.type === "friends_list") {
+                setFriendList(response.data_set);
                 setLoading(false);
-            }
-
-            if (response.type === "new_message" && response.data_set.to.id === friendId) {
-                setMessages((prev) => [...prev, response.data_set]);
             }
         };
 
@@ -35,7 +31,7 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
         return () => {
             socket.removeEventListener("message", onMessage);
         }
-    }, [socket, friendId]);
+    }, [socket]);
 
-    return { messages, loading };
+    return { friendList, loading };
 }
