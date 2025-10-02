@@ -41,7 +41,7 @@ export default function Chats() {
             });
         }}>
             <View className="h-auto w-full flex flex-row justify-between items-center p-2.5 gap-5">
-                <View className="flex-1 flex flex-row justify-start items-center gap-5">
+                <View className="flex-1 flex flex-row justify-center items-center gap-5">
                     <View className="h-16 w-16 border border-black dark:border-white flex justify-center items-center p-0.5 rounded-full overflow-hidden flex-shrink-0">
                         {item.profileImage ? (
                             <Image source={{ uri: item.profileImage }} className="h-full w-full rounded-full" resizeMode="cover" />
@@ -60,8 +60,10 @@ export default function Chats() {
 
                 <View className="h-auto w-auto flex flex-col justify-center items-end gap-2 flex-shrink-0">
                     <Text className="text-right text-gray-400 font-EncodeSansCondensedMedium">{formatDateTime(item.lastMessageTimeStamp)}</Text>
-                    <View className="h-6 w-6 flex justify-center items-center bg-sand-300 rounded-full">
-                        <Text className="text-xs text-center text-black font-EncodeSansCondensedMedium">{item.unreadMessageCount}</Text>
+                    <View className={`h-6 w-6 flex justify-center items-center ${item.unreadMessageCount > 0 ? 'bg-sand-300' : 'bg-transparent'} rounded-full`}>
+                        {item.unreadMessageCount > 0 && (
+                            <Text className="text-xs text-center text-black font-EncodeSansCondensedMedium">{item.unreadMessageCount}</Text>
+                        )}
                     </View>
                 </View>
             </View>

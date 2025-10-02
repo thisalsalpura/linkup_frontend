@@ -1,55 +1,94 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
-import { KeyboardAvoidingView, Platform, Text, TouchableOpacity, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
-import { TextInput } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { faSquareArrowUpRight, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { SimpleRounded } from 'react-native-bubble-chat';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootParamList } from "../App";
+import { useNavigation } from "@react-navigation/native";
+import { useSendChat } from "../web_socket/services/UseSendChat";
+import { useSingleChat } from "../web_socket/services/UseSingleChat";
+import { Chat } from "../web_socket/Chat.Interfaces";
+import { formatDateTime } from "../util/DateFormatter";
 
-export default function SingleChatScreen() {
+type NavigationProps = NativeStackScreenProps<RootParamList, "SingleChatScreen">;
+
+export default function SingleChatScreen({ route }: NavigationProps) {
+
+    const navigator = useNavigation<NavigationProps>();
+
+    const { friendId, friendFname, friendLname, profileImage } = route.params;
 
     const { applied } = useTheme();
 
+    const flatListRef = useRef<any>(null);
+
+    const messages = useSingleChat(friendId);
+
     const [chatText, setChatText] = useState('');
 
-    const messages = [
-        {
-            id: 1,
-            text: "Hi",
-            sender: "friend",
-            time: "10:56 AM"
-        },
+    const sendMessage = useSendChat();
 
-        {
-            id: 2,
-            text: "Hi, hello",
-            sender: "friend",
-            time: "10.57 AM"
-        },
-
-        {
-            id: 3,
-            text: "Hello, Kohomathe",
-            sender: "me",
-            time: "10.58 AM",
-            status: "read"
+    const handlerSendChat = () => {
+        if (!chatText || chatText.trim().length === 0) {
+            return;
         }
-    ];
 
-    const renderItem = ({ item }: any) => (
-        <TouchableOpacity className="flex flex-row self-start justify-center items-center">
-            <View className="h-auto w-auto max-w-[50%] flex justify-center items-start bg-black dark:bg-white p-4 rounded-lg">
-                <View className="h-auto w-auto flex flex-wrap justify-center items-center">
-                    <Text className="text-lg text-white dark:text-black font-EncodeSansCondensedMedium tracking-wide">{item.text}</Text>
-                </View>
-            </View>
+        sendMessage(friendId, chatText);
+        setChatText('');
+    }
 
-            <View className="h-0 w-0 border-t-[8px] border-b-[8px] border-l-[8px] border-r-0 border-t-transparent border-b-transparent border-l-black dark:border-l-white border-r-transparent mt-[10px] -mr-[10px]" />
-        </TouchableOpacity>
-    );
+    const renderItem = ({ item }: { item: Chat }) => {
+        const isMe = item.from.id !== friendId;
+
+        return (
+            <TouchableOpacity className={`h-auto w-auto max-w-[65%] ${isMe ? 'self-end' : 'self-start'}`}>
+                <SimpleRounded
+                    isSender={isMe ? true : false}
+                    senderPoint="TOP"
+                    recieverPoint="TOP"
+                    backgroundColor={applied === "dark" ? "#FFFFFF" : "#000000"}
+                    paddingHorizontal={15}
+                    paddingVertical={12}
+                >
+                    <Text className="text-lg text-white dark:text-black font-EncodeSansCondensedMedium tracking-wide">{item.message}</Text>
+                    <View className="mt-2.5 flex flex-row justify-between items-center gap-5">
+                        <Text className="text-right text-gray-400 font-EncodeSansCondensedRegular">{formatDateTime(item.updatedAt)}</Text>
+                        {isMe && (
+                            <View className="flex flex-row justify-center items-center gap-1">
+                                {item.status === "SENT" && (
+                                    <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#9CA3AF" />
+                                )}
+                                {item.status === "DELIVERED" && (
+                                    <>
+                                        <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#9CA3AF" />
+                                        <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#9CA3AF" />
+                                    </>
+                                )}
+                                {item.status === "READ" && (
+                                    <>
+                                        <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#2563EB" />
+                                        <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#2563EB" />
+                                    </>
+                                )}
+                            </View>
+                        )}
+                    </View>
+                </SimpleRounded>
+            </TouchableOpacity>
+        );
+    };
+
+    useEffect(() => {
+        if (flatListRef.current && messages.length > 0) {
+            flatListRef.current.scrollToEnd({ animated: true });
+        }
+    }, [messages]);
 
     return (
         <AlertNotificationRoot
@@ -62,44 +101,42 @@ export default function SingleChatScreen() {
             <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
                 <View className="h-auto w-full bg-sand-400 flex flex-row justify-center items-center px-4 py-4 gap-6">
                     <View className="h-12 w-12 flex justify-center items-center border border-black rounded-full p-0.5 flex-shrink-0">
-
+                        {profileImage ? (
+                            <Image source={{ uri: profileImage }} className="h-full w-full rounded-full" resizeMode="cover" />
+                        ) : (
+                            <View className="h-full w-full bg-sand flex justify-center items-center rounded-full">
+                                <Text className="text-xl text-center text-black font-EncodeSansCondensedBold tracking-widest">{friendFname[0]}{friendLname[0]}</Text>
+                            </View>
+                        )}
                     </View>
 
                     <View className="flex-1 h-auto w-auto flex justify-center items-start">
-                        <Text className="text-xl text-left text-black font-EncodeSansCondensedBold" numberOfLines={1} ellipsizeMode="tail">Sahan Perera</Text>
+                        <Text className="text-xl text-left text-black font-EncodeSansCondensedBold" numberOfLines={1} ellipsizeMode="tail">{friendFname + " " + friendLname}</Text>
                     </View>
                 </View>
 
                 <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
-                    <KeyboardAwareFlatList className="flex-1 bg-white dark:bg-[#1C1C21] px-6 py-6" data={messages} contentContainerStyle={{ gap: 10, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}
+                    <KeyboardAwareFlatList className="flex-1 bg-white dark:bg-[#1C1C21] px-6 py-6" ref={flatListRef} data={messages} contentContainerStyle={{ gap: 10, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <View></View>
+                            <View />
                         }
+                        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
                     />
 
-                    <View className="bottom-0 h-auto w-full bg-white dark:bg-[#1C1C21] flex flex-row justify-center items-center px-4 py-4 gap-6 border-t-2 border-sand-400">
-                        <View className="flex-1 flex justify-center items-center">
+                    <View className="bottom-0 left-0 right-0 h-auto w-full bg-white dark:bg-[#1C1C21] flex flex-row justify-center items-center px-4 py-4 gap-6 border-t-2 border-b-2 border-t-sand-400 border-b-sand-400">
+                        <View className="flex-1 justify-center items-center">
                             <TextInput
                                 value={chatText}
                                 onChangeText={setChatText}
-                                mode="outlined"
-                                textColor={applied === "dark" ? "#FFFFFF" : "#000000"}
-                                outlineColor="#E3D5CA"
-                                activeOutlineColor="#D5BDAF"
-                                style={{ height: 50, width: "100%", backgroundColor: applied === "dark" ? "#1C1C21" : "#FFFFFF" }}
-                                theme={{
-                                    colors: {
-                                        placeholder: "#E3D5CA",
-                                        primary: "#D5BDAF"
-                                    }
-                                }}
+                                multiline
+                                className="min-h-[50px] max-h-[100px] w-full bg-white dark:bg-[#1C1C21] text-start text-black dark:text-white font-EncodeSansCondensedMedium border-2 border-[#E3D5CA] rounded-[10px] p-[10px]"
                             />
                         </View>
 
-                        <View className="h-[50px] w-[50px] flex justify-center items-center bg-sand-400 border border-sand-400 rounded-2xl">
+                        <TouchableOpacity className="h-[50px] w-[50px] flex justify-center items-center bg-sand-400 border-2 border-sand-400 rounded-2xl" onPress={handlerSendChat}>
                             <FontAwesomeIcon icon={faSquareArrowUpRight as IconProp} color="#000000" size={24} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
             </SafeAreaView>
