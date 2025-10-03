@@ -34,4 +34,6 @@ export interface WSRequest {
 export interface WSResponse {
     type: string;
     data_set: any;
+    status: boolean;
+    message: string;
 }

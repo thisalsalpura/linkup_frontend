@@ -6,7 +6,7 @@ export function useChatList(): { chatList: Chat[]; loading: boolean } {
 
     const { socket, sendMessage } = useWebSocket();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [chatList, setChatList] = useState<Chat[]>([]);
 

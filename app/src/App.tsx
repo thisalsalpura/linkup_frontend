@@ -10,12 +10,12 @@ import AvatarAdding from "./screens/AvatarAdding";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import SingleChatScreen from "./screens/SingleChatScreen";
+import FriendContacts from "./screens/FriendContacts";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
 import { WebSocketProvider } from "./web_socket/WebSocketProvider";
 import "./global.css";
-import FriendContacts from "./screens/FriendContacts";
 
 export type RootParamList = {
   Splash: undefined;

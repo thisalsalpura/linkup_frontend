@@ -6,7 +6,7 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
 
     const { socket, sendMessage } = useWebSocket();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [messages, setMessages] = useState<Chat[]>([]);
 

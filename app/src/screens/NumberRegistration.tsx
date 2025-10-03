@@ -139,7 +139,7 @@ export default function NumberRegistration() {
                                                 title: 'Warning',
                                                 textBody: validCountryCode,
                                             });
-                                        } if (validMobile) {
+                                        } else if (validMobile) {
                                             Toast.show({
                                                 type: ALERT_TYPE.WARNING,
                                                 title: 'Warning',
