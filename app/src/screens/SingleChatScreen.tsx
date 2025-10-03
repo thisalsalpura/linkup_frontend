@@ -16,6 +16,7 @@ import { useSingleChat } from "../web_socket/services/UseSingleChat";
 import { Chat } from "../web_socket/Chat.Interfaces";
 import { formatDateTime } from "../util/DateFormatter";
 import Loader from "../components/Loader";
+import { StatusBar } from "expo-status-bar";
 
 type NavigationProps = NativeStackScreenProps<RootParamList, "SingleChatScreen">;
 
@@ -146,6 +147,8 @@ export default function SingleChatScreen({ route }: NavigationProps) {
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
+
+                <StatusBar hidden={true} />
             </SafeAreaView>
         </AlertNotificationRoot>
     );

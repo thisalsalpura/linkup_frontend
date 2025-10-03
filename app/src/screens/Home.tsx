@@ -7,6 +7,7 @@ import Calls from "./home_tabs/Calls";
 import { faComment, faChartBar, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { StatusBar } from "expo-status-bar";
 
 const Tabs = createBottomTabNavigator();
 
@@ -45,6 +46,8 @@ export default function Home() {
                 <Tabs.Screen name="Status" component={Status} />
                 <Tabs.Screen name="Calls" component={Calls} />
             </Tabs.Navigator>
+
+            <StatusBar hidden={true} />
         </SafeAreaView>
     );
 }

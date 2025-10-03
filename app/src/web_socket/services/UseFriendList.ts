@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useFriendList(): { friendList: Chat[]; loading: boolean } {
+export function useFriendList(): { friendList: Chat[]; setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>; loading: boolean } {
 
     const { socket, sendMessage } = useWebSocket();
 
@@ -21,7 +21,7 @@ export function useFriendList(): { friendList: Chat[]; loading: boolean } {
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
             if (response.type === "friends_list") {
-                setFriendList(response.data_set);
+                setFriendList((prev) => [...prev, response.data_set]);
                 setLoading(false);
             }
         };
@@ -33,5 +33,5 @@ export function useFriendList(): { friendList: Chat[]; loading: boolean } {
         }
     }, [socket]);
 
-    return { friendList, loading };
+    return { friendList, setFriendList, loading };
 }

@@ -82,6 +82,7 @@ export default function Splash() {
                 <CircleShape height={200} width={200} fillColor="#D5BDAF" borderRadius={999} bottomValue={-65} rightValue={-75} />
                 <CircleShape height={150} width={150} fillColor="#D5BDAF" borderRadius={999} bottomValue={-125} rightValue={20} />
             </View>
+
             <StatusBar hidden={true} />
         </SafeAreaView>
     );

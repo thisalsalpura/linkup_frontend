@@ -19,6 +19,7 @@ import CountryPicker, { Country, CountryCode } from "react-native-country-picker
 import { useAddNewContact } from "../web_socket/services/UseAddContact";
 import { validateCountryCode, validateMobile } from "../util/Validation";
 import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
+import { StatusBar } from "expo-status-bar";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "FriendContacts">;
 
@@ -32,7 +33,7 @@ export default function FriendContacts() {
 
     const [searchText, setSearchText] = useState('');
 
-    const { friendList, loading: friendListLoading } = useFriendList();
+    const { friendList, setFriendList, loading: friendListLoading } = useFriendList();
 
     const filteredFriends = friendList.filter((friend) => {
         return (
@@ -83,7 +84,7 @@ export default function FriendContacts() {
 
     const [country, setCountry] = useState<Country | null>(null);
 
-    const { addNewContact, loading: addNewContactLoading } = useAddNewContact(setShow);
+    const { addNewContact, loading: addNewContactLoading } = useAddNewContact(setFriendList, setModalVisible);
 
     return (
         <AlertNotificationRoot
@@ -258,6 +259,8 @@ export default function FriendContacts() {
                         <FontAwesomeIcon icon={faPlus as IconProp} color="#000000" size={24} />
                     </TouchableOpacity>
                 </View>
+
+                <StatusBar hidden={true} />
             </SafeAreaView>
         </AlertNotificationRoot>
     );

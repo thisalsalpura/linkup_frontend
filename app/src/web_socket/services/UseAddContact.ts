@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
-import { WSResponse } from "../Chat.Interfaces";
+import { Chat, WSResponse } from "../Chat.Interfaces";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-export function useAddNewContact(setShow: React.Dispatch<React.SetStateAction<boolean>>): { addNewContact: (data: any) => void; loading: boolean } {
+export function useAddNewContact(setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>): { addNewContact: (data: any) => void; loading: boolean } {
 
     const { sendMessage, socket } = useWebSocket();
 
@@ -30,7 +30,8 @@ export function useAddNewContact(setShow: React.Dispatch<React.SetStateAction<bo
                         textBody: response.message,
                     });
 
-                    setShow(false);
+                    setFriendList((prev) => [...prev, response.data_set]);
+                    setModalVisible(false);
                 } else {
                     Toast.show({
                         type: ALERT_TYPE.WARNING,
