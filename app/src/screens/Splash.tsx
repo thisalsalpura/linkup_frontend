@@ -10,6 +10,7 @@ import { RootParamList } from "../App";
 import { useNavigation } from "@react-navigation/native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useTheme } from "../theme/ThemeProvider";
+import { useWebSocketPing } from "../web_socket/services/UseWebSocketPing";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Splash">;
 
@@ -18,6 +19,8 @@ export default function Splash() {
     const navigator = useNavigation<NavigationProps>();
 
     const { applied } = useTheme();
+
+    useWebSocketPing(60000);
 
     const [progress, setProgress] = useState(0);
 
