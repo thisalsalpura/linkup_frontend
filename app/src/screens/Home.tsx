@@ -8,12 +8,15 @@ import { faComment, faChartBar, faPhone } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { StatusBar } from "expo-status-bar";
+import Header from "../components/Header";
 
 const Tabs = createBottomTabNavigator();
 
 export default function Home() {
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>
+            <Header />
+
             <Tabs.Navigator screenOptions={({ route }) => ({
                 tabBarIcon: ({ color }) => {
                     let iconName = faComment;

@@ -6,7 +6,6 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootParamList } from "../../App";
-import Header from "../../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCalendarPlus } from "@fortawesome/free-regular-svg-icons";
@@ -98,8 +97,6 @@ export default function Chats() {
                     <Loader />
                 </View>
             )}
-
-            <Header />
 
             <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
                 <KeyboardAwareFlatList className="flex-1 bg-white dark:bg-[#1C1C21] px-6 py-6" data={filteredChats} contentContainerStyle={{ gap: 8, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}
