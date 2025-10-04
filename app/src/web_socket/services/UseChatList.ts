@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useChatList(): { chatList: Chat[]; loading: boolean } {
+export function useChatList(): { chatList: Chat[]; loading: boolean, fetchChatList: () => void; } {
 
     const { socket, sendMessage } = useWebSocket();
 
@@ -10,13 +10,17 @@ export function useChatList(): { chatList: Chat[]; loading: boolean } {
 
     const [chatList, setChatList] = useState<Chat[]>([]);
 
-    useEffect(() => {
-        if (!socket) {
-            return;
-        }
+    const fetchChatList = useCallback(() => {
+        if (!socket) return;
 
         setLoading(true);
         sendMessage({ type: "get_chat_list" });
+    }, [socket, sendMessage]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        fetchChatList();
 
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
@@ -31,7 +35,7 @@ export function useChatList(): { chatList: Chat[]; loading: boolean } {
         return () => {
             socket.removeEventListener("message", onMessage);
         }
-    }, [socket]);
+    }, [socket, fetchChatList]);
 
-    return { chatList, loading };
+    return { chatList, loading, fetchChatList };
 }

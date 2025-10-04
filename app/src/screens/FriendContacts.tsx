@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Image, KeyboardAvoidingView, Platform, Text, TouchableOpacity, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootParamList } from "../App";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -33,7 +33,7 @@ export default function FriendContacts() {
 
     const [searchText, setSearchText] = useState('');
 
-    const { friendList, setFriendList, loading: friendListLoading } = useFriendList();
+    const { friendList, setFriendList, loading: friendListLoading, fetchFriendList } = useFriendList();
 
     const filteredFriends = friendList.filter((friend) => {
         return (
@@ -86,6 +86,25 @@ export default function FriendContacts() {
 
     const { addNewContact, loading: addNewContactLoading } = useAddNewContact(setFriendList, setModalVisible);
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await fetchFriendList();
+        setRefreshing(false);
+    }, [fetchFriendList]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const refresh = async () => {
+                await fetchFriendList();
+            };
+            refresh();
+
+            return () => { };
+        }, [fetchFriendList])
+    );
+
     return (
         <AlertNotificationRoot
             theme={applied === "dark" ? "light" : "dark"}
@@ -130,6 +149,9 @@ export default function FriendContacts() {
                             <TouchableOpacity className="h-auto w-full bg-blur justify-center items-center rounded-2xl p-6" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }}>
                                 <Text className="text-xl text-center text-black dark:text-white font-EncodeSansCondensedMedium">You didn't have contact with anyone Yet!</Text>
                             </TouchableOpacity>
+                        }
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                         }
                     />
                 </KeyboardAvoidingView>

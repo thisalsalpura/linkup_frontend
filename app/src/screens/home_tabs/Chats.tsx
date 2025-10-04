@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Image, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { TextInput } from "react-native-paper";
 import { useTheme } from "../../theme/ThemeProvider";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootParamList } from "../../App";
 import Header from "../../components/Header";
@@ -23,7 +23,7 @@ export default function Chats() {
 
     const { applied } = useTheme();
 
-    const { chatList, loading } = useChatList();
+    const { chatList, loading, fetchChatList } = useChatList();
 
     const [search, setSearch] = useState('');
 
@@ -72,6 +72,25 @@ export default function Chats() {
         </TouchableOpacity>
     );
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await fetchChatList();
+        setRefreshing(false);
+    }, [fetchChatList]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const refresh = async () => {
+                await fetchChatList();
+            };
+            refresh();
+
+            return () => { };
+        }, [fetchChatList])
+    );
+
     return (
         <>
             {loading && (
@@ -111,6 +130,9 @@ export default function Chats() {
                         <TouchableOpacity className="h-auto w-full bg-blur justify-center items-center rounded-2xl p-6" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }}>
                             <Text className="text-xl text-center text-black dark:text-white font-EncodeSansCondensedMedium">You didn't chat with anyone Yet!</Text>
                         </TouchableOpacity>
+                    }
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                 />
             </KeyboardAvoidingView>

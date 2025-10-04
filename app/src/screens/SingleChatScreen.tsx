@@ -87,7 +87,7 @@ export default function SingleChatScreen({ route }: NavigationProps) {
     };
 
     useEffect(() => {
-        if (flatListRef.current && messages.length > 0) {
+        if (flatListRef.current && messages && messages.length > 0) {
             flatListRef.current.scrollToEnd({ animated: true });
         }
     }, [messages]);

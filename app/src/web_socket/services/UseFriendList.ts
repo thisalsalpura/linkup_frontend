@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useFriendList(): { friendList: Chat[]; setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>; loading: boolean } {
+export function useFriendList(): { friendList: Chat[]; setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>; loading: boolean; fetchFriendList: () => void; } {
 
     const { socket, sendMessage } = useWebSocket();
 
@@ -10,18 +10,22 @@ export function useFriendList(): { friendList: Chat[]; setFriendList: React.Disp
 
     const [friendList, setFriendList] = useState<Chat[]>([]);
 
-    useEffect(() => {
-        if (!socket) {
-            return;
-        }
+    const fetchFriendList = useCallback(() => {
+        if (!socket) return;
 
         setLoading(true);
         sendMessage({ type: "get_friend_list" });
+    }, [socket, sendMessage]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        fetchFriendList();
 
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
             if (response.type === "friends_list") {
-                setFriendList((prev) => [...prev, response.data_set]);
+                setFriendList(response.data_set);
                 setLoading(false);
             }
         };
@@ -31,7 +35,7 @@ export function useFriendList(): { friendList: Chat[]; setFriendList: React.Disp
         return () => {
             socket.removeEventListener("message", onMessage);
         }
-    }, [socket]);
+    }, [socket, fetchFriendList]);
 
-    return { friendList, setFriendList, loading };
+    return { friendList, setFriendList, loading, fetchFriendList };
 }

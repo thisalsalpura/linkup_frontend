@@ -3,7 +3,7 @@ import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-export function useAddNewContact(setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>): { addNewContact: (data: any) => void; loading: boolean } {
+export function useAddNewContact(setFriendList: React.Dispatch<React.SetStateAction<Chat[]>>, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>): { addNewContact: (data: any) => void; loading: boolean; } {
 
     const { sendMessage, socket } = useWebSocket();
 
@@ -15,9 +15,7 @@ export function useAddNewContact(setFriendList: React.Dispatch<React.SetStateAct
     };
 
     useEffect(() => {
-        if (!socket) {
-            return;
-        }
+        if (!socket) return;
 
         const onMessage = (event: MessageEvent) => {
             const response: WSResponse = JSON.parse(event.data);
@@ -30,7 +28,12 @@ export function useAddNewContact(setFriendList: React.Dispatch<React.SetStateAct
                         textBody: response.message,
                     });
 
-                    setFriendList((prev) => [...prev, response.data_set]);
+                    if (Array.isArray(response.data_set)) {
+                        setFriendList((prev) => [...prev, ...response.data_set]);
+                    } else {
+                        setFriendList((prev) => [...prev, response.data_set]);
+                    }
+
                     setModalVisible(false);
                 } else {
                     Toast.show({

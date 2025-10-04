@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { Chat, WSResponse } from "../Chat.Interfaces";
 
-export function useSingleChat(friendId: number): { messages: Chat[]; loading: boolean } {
+export function useSingleChat(friendId: number): { messages: Chat[]; loading: boolean; } {
 
     const { socket, sendMessage } = useWebSocket();
 
@@ -11,9 +11,7 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
     const [messages, setMessages] = useState<Chat[]>([]);
 
     useEffect(() => {
-        if (!socket) {
-            return;
-        }
+        if (!socket) return;
 
         setLoading(true);
         sendMessage({ type: "get_single_chat", friendId });
@@ -21,12 +19,16 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
         const onMessage = (event: MessageEvent) => {
             let response: WSResponse = JSON.parse(event.data);
             if (response.type === "single_chat") {
-                setMessages(response.data_set);
+                setMessages(response.data_set ? response.data_set : []);
                 setLoading(false);
             }
 
             if (response.type === "new_message" && response.data_set.to.id === friendId) {
-                setMessages((prev) => [...prev, response.data_set]);
+                if (Array.isArray(response.data_set)) {
+                    setMessages((prev) => [...prev, ...response.data_set]);
+                } else {
+                    setMessages((prev) => [...prev, response.data_set]);
+                }
             }
         };
 
