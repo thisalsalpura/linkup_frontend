@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FlatList, Image, KeyboardAvoidingView, Platform, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,6 +18,7 @@ import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-not
 import { validateProfileImage } from "../util/Validation";
 import { createNewAccount } from "../api/CreateNewAccount";
 import Loader from "../components/Loader";
+import { AuthContext } from "../hooks/AuthProvider";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "AvatarAdding">;
 
@@ -64,6 +65,8 @@ export default function AvatarAdding() {
     ];
 
     const { userData, setUserData } = useUserRegistration();
+
+    const auth = useContext(AuthContext);
 
     return (
         <AlertNotificationRoot
@@ -158,9 +161,10 @@ export default function AvatarAdding() {
                                                     textBody: response.message,
                                                 });
 
-                                                setTimeout(() => {
-                                                    navigator.replace("Home");
-                                                }, 2000);
+                                                const id = response.userId;
+                                                if (auth) {
+                                                    await auth.signUp(String(id));
+                                                }
                                             } else {
                                                 Toast.show({
                                                     type: ALERT_TYPE.WARNING,
@@ -205,9 +209,10 @@ export default function AvatarAdding() {
                                                         textBody: response.message,
                                                     });
 
-                                                    setTimeout(() => {
-                                                        navigator.replace("Home");
-                                                    }, 2000);
+                                                    const id = response.userId;
+                                                    if (auth) {
+                                                        await auth.signUp(String(id));
+                                                    }
                                                 } else {
                                                     Toast.show({
                                                         type: ALERT_TYPE.WARNING,

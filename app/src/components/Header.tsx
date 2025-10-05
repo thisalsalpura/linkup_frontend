@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { LayoutChangeEvent, Text, TouchableOpacity, View } from "react-native";
 import { faCamera, faBars, faClose } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootParamList } from "../App";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../hooks/AuthProvider";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
@@ -28,6 +29,8 @@ export default function Header() {
     const onHeaderLayout = (e: LayoutChangeEvent) => {
         setHeaderHeight(e.nativeEvent.layout.height);
     };
+
+    const auth = useContext(AuthContext);
 
     return (
         <>
@@ -60,7 +63,7 @@ export default function Header() {
                     <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => navigator.navigate("Setting")}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Setting</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="h-auto w-full flex justify-center items-center">
+                    <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => { if (auth) auth.signOut(); }}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Logout</Text>
                     </TouchableOpacity>
                 </View>

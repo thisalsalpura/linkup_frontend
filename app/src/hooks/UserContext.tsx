@@ -28,8 +28,8 @@ export const UserRegistrationProvider: React.FC<{ children: ReactNode }> = ({ ch
         <UserRegistrationContext.Provider value={{ userData, setUserData }}>
             {children}
         </UserRegistrationContext.Provider>
-    )
-};
+    );
+}
 
 export const useUserRegistration = (): UserRegistrationContextType => {
     const ctx = useContext(UserRegistrationContext);

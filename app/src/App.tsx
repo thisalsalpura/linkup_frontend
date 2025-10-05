@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useCustomFonts } from "./hooks/UseFonts";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Loader from "./components/Loader";
 import Splash from "./screens/Splash";
-import SignIn from "./screens/SignIn";
 import NumberRegistration from "./screens/NumberRegistration";
 import AvatarAdding from "./screens/AvatarAdding";
 import SignUp from "./screens/SignUp";
+import SignIn from "./screens/SignIn";
 import Home from "./screens/Home";
 import SingleChatScreen from "./screens/SingleChatScreen";
 import FriendContacts from "./screens/FriendContacts";
@@ -17,6 +17,7 @@ import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
 import { WebSocketProvider } from "./web_socket/WebSocketProvider";
+import { AuthContext, AuthProvider } from "./hooks/AuthProvider";
 import "./global.css";
 
 export type RootParamList = {
@@ -37,9 +38,11 @@ export type RootParamList = {
   Setting: undefined;
 }
 
-export default function App() {
+const Stack = createNativeStackNavigator<RootParamList>();
 
-  const Stack = createNativeStackNavigator<RootParamList>();
+function LinkUp() {
+
+  const auth = useContext(AuthContext);
 
   const fontsLoaded = useCustomFonts();
 
@@ -48,7 +51,7 @@ export default function App() {
   }
 
   return (
-    <WebSocketProvider userId={1}>
+    <WebSocketProvider userId={auth ? Number(auth.userId) : 0}>
       <ThemeProvider>
         <UserRegistrationProvider>
           <PaperProvider
@@ -75,21 +78,37 @@ export default function App() {
           >
             <NavigationContainer>
               <Stack.Navigator initialRouteName="Home" screenOptions={{ animation: "fade", headerShown: false }}>
-                <Stack.Screen name="Splash" component={Splash} />
-                <Stack.Screen name="SignIn" component={SignIn} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
-                <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
-                <Stack.Screen name="FriendContacts" component={FriendContacts} />
-                <Stack.Screen name="Profile" component={Profile} />
-                <Stack.Screen name="Setting" component={Setting} />
+                {auth?.isLoading ? (
+                  <Stack.Screen name="Splash" component={Splash} />
+                ) : auth?.userId === null ? (
+                  <Stack.Group>
+                    <Stack.Screen name="SignUp" component={SignUp} />
+                    <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
+                    <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
+                  </Stack.Group>
+                ) : (
+                  <Stack.Group>
+                    <Stack.Screen name="SignIn" component={SignIn} />
+                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
+                    <Stack.Screen name="FriendContacts" component={FriendContacts} />
+                    <Stack.Screen name="Profile" component={Profile} />
+                    <Stack.Screen name="Setting" component={Setting} />
+                  </Stack.Group>
+                )}
               </Stack.Navigator>
             </NavigationContainer>
           </PaperProvider>
         </UserRegistrationProvider>
       </ThemeProvider>
     </WebSocketProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <LinkUp />
+    </AuthProvider>
   );
 }

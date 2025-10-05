@@ -11,7 +11,7 @@ type ThemeContextType = {
     preference: ThemeOption;
     applied: "light" | "dark";
     setPreference: (themeOption: ThemeOption) => Promise<void>;
-};
+}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
