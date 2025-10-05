@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 
 export type ThemeOption = "light" | "dark" | "system";
+
 const THEME_KEY = "@app_color_scheme";
 
 type ThemeContextType = {
@@ -15,14 +16,18 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+
     const { colorScheme, setColorScheme } = useColorScheme();
+
     const [preferenceState, setPreferenceState] = useState<ThemeOption>("system");
+
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         (async () => {
             try {
                 const savedTheme = await AsyncStorage.getItem(THEME_KEY);
+
                 if (savedTheme === "light" || savedTheme === "dark") {
                     setPreferenceState(savedTheme);
                     setColorScheme(savedTheme);

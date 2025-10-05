@@ -11,6 +11,8 @@ import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import SingleChatScreen from "./screens/SingleChatScreen";
 import FriendContacts from "./screens/FriendContacts";
+import Profile from "./screens/Profile";
+import Setting from "./screens/Setting";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
@@ -31,6 +33,8 @@ export type RootParamList = {
     profileImage: string;
   };
   FriendContacts: undefined;
+  Profile: undefined;
+  Setting: undefined;
 }
 
 export default function App() {
@@ -79,6 +83,8 @@ export default function App() {
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
                 <Stack.Screen name="FriendContacts" component={FriendContacts} />
+                <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen name="Setting" component={Setting} />
               </Stack.Navigator>
             </NavigationContainer>
           </PaperProvider>

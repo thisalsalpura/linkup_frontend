@@ -1,12 +1,19 @@
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { LayoutChangeEvent, Text, TouchableOpacity, View } from "react-native";
-import { faCamera, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import Modal from 'react-native-modal';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootParamList } from "../App";
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
 export default function Header() {
+
+    const navigator = useNavigation<NavigationProps>();
 
     const insets = useSafeAreaInsets();
 
@@ -34,7 +41,7 @@ export default function Header() {
                 </TouchableOpacity>
 
                 <TouchableOpacity className="flex justify-center items-center" onPress={toggleModal}>
-                    <FontAwesomeIcon icon={faBars as IconProp} color="#000000" size={24} />
+                    <FontAwesomeIcon icon={(isModalVisible ? faClose : faBars) as IconProp} color="#000000" size={24} />
                 </TouchableOpacity>
             </View>
 
@@ -47,10 +54,10 @@ export default function Header() {
                 style={{ alignItems: "center", margin: 0 }}
             >
                 <View className="absolute h-auto w-[90%] flex justify-center items-center bg-black dark:bg-white border-2 border-black dark:border-white p-6 rounded-[10px] gap-6" style={{ top: insets.top + headerHeight }}>
-                    <TouchableOpacity className="h-auto w-full flex justify-center items-center">
+                    <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => navigator.navigate("Profile")}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Profile</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="h-auto w-full flex justify-center items-center">
+                    <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => navigator.navigate("Setting")}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Setting</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className="h-auto w-full flex justify-center items-center">
