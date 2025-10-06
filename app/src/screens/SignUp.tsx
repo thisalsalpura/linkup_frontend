@@ -128,6 +128,16 @@ export default function SignUp() {
                                     textClass="text-white dark:text-black"
                                     showIcon={true}
                                 />
+
+                                <Button
+                                    name="SignIn"
+                                    onPress={() => {
+                                        navigator.navigate("SignIn");
+                                    }}
+                                    containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
+                                    textClass="text-white dark:text-black"
+                                    showIcon={false}
+                                />
                             </View>
                         </View>
                     </KeyboardAwareScrollView>

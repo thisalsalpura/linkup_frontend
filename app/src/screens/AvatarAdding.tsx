@@ -165,6 +165,8 @@ export default function AvatarAdding() {
                                                 if (auth) {
                                                     await auth.signUp(String(id));
                                                 }
+
+                                                navigator.replace("Home");
                                             } else {
                                                 Toast.show({
                                                     type: ALERT_TYPE.WARNING,
@@ -181,8 +183,9 @@ export default function AvatarAdding() {
                                 >
                                     <Text className="text-black text-lg font-EncodeSansCondensedBold tracking-widest">Skip for Now</Text>
                                 </Pressable>
+
                                 <Button
-                                    name="Next"
+                                    name="Register"
                                     onPress={async () => {
                                         const validProfileImage = validateProfileImage(
                                             userData.profileImage
@@ -213,6 +216,8 @@ export default function AvatarAdding() {
                                                     if (auth) {
                                                         await auth.signUp(String(id));
                                                     }
+
+                                                    navigator.replace("Home");
                                                 } else {
                                                     Toast.show({
                                                         type: ALERT_TYPE.WARNING,
@@ -229,7 +234,7 @@ export default function AvatarAdding() {
                                     }}
                                     containerClass="bg-black dark:bg-white border-2 border-black dark:border-white"
                                     textClass="text-white dark:text-black"
-                                    showIcon={true}
+                                    showIcon={false}
                                 />
                             </View>
                         </View>
