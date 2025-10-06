@@ -20,7 +20,7 @@ export const createNewAccount = async (
         } as any);
     }
 
-    const response = await fetch(API + "/UserController", {
+    const response = await fetch(API + "/CreateNewAccount", {
         method: "POST",
         body: form
     });

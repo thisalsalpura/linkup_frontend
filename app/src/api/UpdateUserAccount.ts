@@ -23,8 +23,8 @@ export const updateUserAccount = async (
         form.append("profileImgStatus", "WITHOUT_PROFILE_IMG");
     }
 
-    const response = await fetch(API + "/UserController", {
-        method: "PUT",
+    const response = await fetch(API + "/UpdateUserAccount", {
+        method: "POST",
         body: form
     });
 

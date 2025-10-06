@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useWebSocket } from "../WebSocketProvider";
 import { User, WSResponse } from "../Chat.Interfaces";
 
-export function useUserProfile(): { userProfile: User[]; loading: boolean; } {
+export function useUserProfile(): { userProfile: User[]; setUserProfile: React.Dispatch<React.SetStateAction<User[]>>; loading: boolean; } {
 
     const { socket, sendMessage } = useWebSocket();
 
@@ -31,5 +31,5 @@ export function useUserProfile(): { userProfile: User[]; loading: boolean; } {
         }
     }, [socket]);
 
-    return { userProfile, loading };
+    return { userProfile, setUserProfile, loading };
 }

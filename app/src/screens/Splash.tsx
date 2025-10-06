@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useTheme } from "../theme/ThemeProvider";
 import { useWebSocketPing } from "../web_socket/services/UseWebSocketPing";
+import { AuthContext } from "../hooks/AuthProvider";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Splash">;
 
@@ -21,6 +22,8 @@ export default function Splash() {
     const { applied } = useTheme();
 
     useWebSocketPing(60000);
+
+    const auth = useContext(AuthContext);
 
     const [progress, setProgress] = useState(0);
 
@@ -53,11 +56,15 @@ export default function Splash() {
     });
 
     useEffect(() => {
-        if (progress >= 1 && !hasNavigated.current) {
+        if (progress >= 1 && !auth?.isLoading && !hasNavigated.current) {
             hasNavigated.current = true;
-            navigator.replace("SignUp");
+            if (auth?.userId) {
+                navigator.replace("Home");
+            } else {
+                navigator.replace("SignUp");
+            }
         }
-    }, [progress, navigator]);
+    }, [progress, auth?.isLoading, auth?.userId, navigator]);
 
     return (
         <SafeAreaView className="flex-1 bg-sand-400" edges={["top", "bottom"]}>

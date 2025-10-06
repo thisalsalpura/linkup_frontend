@@ -63,7 +63,10 @@ export default function Header() {
                     <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => navigator.navigate("Setting")}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Setting</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => { if (auth) auth.signOut(); }}>
+                    <TouchableOpacity className="h-auto w-full flex justify-center items-center" onPress={() => {
+                        if (auth) auth.signOut();
+                        navigator.replace("Splash");
+                    }}>
                         <Text className="text-xl text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">Logout</Text>
                     </TouchableOpacity>
                 </View>

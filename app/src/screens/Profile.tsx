@@ -18,14 +18,22 @@ import { validateFname, validateLname, validateProfileImage } from "../util/Vali
 import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
 import { updateUserAccount } from "../api/UpdateUserAccount";
 import { AuthContext } from "../hooks/AuthProvider";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootParamList } from "../App";
+import { useNavigation } from "@react-navigation/native";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+
+type NavigationProps = NativeStackNavigationProp<RootParamList, "Profile">;
 
 export default function Profile() {
+
+    const navigator = useNavigation<NavigationProps>();
 
     const { applied } = useTheme();
 
     const [loading, setLoading] = useState(false);
 
-    const { userProfile, loading: userProfileLoading } = useUserProfile();
+    const { userProfile, setUserProfile, loading: userProfileLoading } = useUserProfile();
 
     const [image, setImage] = useState<string | null>();
 
@@ -83,7 +91,7 @@ export default function Profile() {
             if (user.mobile) setMobile(user.mobile);
             if (user.profileImage) setImage(user.profileImage);
         }
-    }, [userProfile]);
+    }, [userProfile, setUserProfile]);
 
     return (
         <AlertNotificationRoot
@@ -103,7 +111,14 @@ export default function Profile() {
                 <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "android" ? "padding" : "height"}>
                     <KeyboardAwareScrollView className="flex-1 bg-white dark:bg-[#1C1C21]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} showsVerticalScrollIndicator={false} extraScrollHeight={20} enableOnAndroid={true} keyboardShouldPersistTaps="handled" enableAutomaticScroll={true}>
                         <View className="flex-1 w-full justify-start items-center px-8 py-12">
-                            <View className="h-auto w-full flex flex-col justify-center items-center gap-8">
+                            <View className="h-auto w-full flex justify-center items-start">
+                                <TouchableOpacity className="h-auto w-auto bg-blur flex flex-row justify-center items-center p-4 rounded-2xl gap-2.5" style={{ backgroundColor: applied === "dark" ? "#ffffff1a" : "#0000001a" }} onPress={() => navigator.navigate("Home")}>
+                                    <FontAwesomeIcon icon={faArrowLeft as IconProp} color={applied === "dark" ? "#FFFFFF" : "#000000"} size={16} />
+                                    <Text className="text-black dark:text-white text-xl font-EncodeSansCondensedBold tracking-widest">Back</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View className="mt-10 h-auto w-full flex flex-col justify-center items-center gap-8">
                                 <SvgUri height={100} uri={"https://raw.githubusercontent.com/thisalsalpura/linkup_frontend/master/assets/icons/logo.svg"} />
                                 <Text className="text-black dark:text-white text-2xl font-EncodeSansCondensedBold tracking-wider">LinkUp</Text>
                             </View>
@@ -291,7 +306,7 @@ export default function Profile() {
                                                         textBody: response.message,
                                                     });
 
-                                                    await useUserProfile();
+                                                    setUserProfile(response.user);
                                                 } else {
                                                     Toast.show({
                                                         type: ALERT_TYPE.WARNING,

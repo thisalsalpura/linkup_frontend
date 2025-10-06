@@ -7,12 +7,12 @@ import Splash from "./screens/Splash";
 import NumberRegistration from "./screens/NumberRegistration";
 import AvatarAdding from "./screens/AvatarAdding";
 import SignUp from "./screens/SignUp";
-import SignIn from "./screens/SignIn";
 import Home from "./screens/Home";
 import SingleChatScreen from "./screens/SingleChatScreen";
 import FriendContacts from "./screens/FriendContacts";
 import Profile from "./screens/Profile";
 import Setting from "./screens/Setting";
+import SignIn from "./screens/SignIn";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { PaperProvider } from "react-native-paper";
 import { UserRegistrationProvider } from "./hooks/UserContext";
@@ -77,25 +77,17 @@ function LinkUp() {
             }}
           >
             <NavigationContainer>
-              <Stack.Navigator initialRouteName="Home" screenOptions={{ animation: "fade", headerShown: false }}>
-                {auth?.isLoading ? (
-                  <Stack.Screen name="Splash" component={Splash} />
-                ) : auth?.userId === null ? (
-                  <Stack.Group>
-                    <Stack.Screen name="SignUp" component={SignUp} />
-                    <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
-                    <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
-                  </Stack.Group>
-                ) : (
-                  <Stack.Group>
-                    <Stack.Screen name="SignIn" component={SignIn} />
-                    <Stack.Screen name="Home" component={Home} />
-                    <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
-                    <Stack.Screen name="FriendContacts" component={FriendContacts} />
-                    <Stack.Screen name="Profile" component={Profile} />
-                    <Stack.Screen name="Setting" component={Setting} />
-                  </Stack.Group>
-                )}
+              <Stack.Navigator initialRouteName="Splash" screenOptions={{ animation: "fade", headerShown: false }}>
+                <Stack.Screen name="Splash" component={Splash} />
+                <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen name="NumberRegistration" component={NumberRegistration} />
+                <Stack.Screen name="AvatarAdding" component={AvatarAdding} />
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
+                <Stack.Screen name="FriendContacts" component={FriendContacts} />
+                <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen name="Setting" component={Setting} />
+                <Stack.Screen name="SignIn" component={SignIn} />
               </Stack.Navigator>
             </NavigationContainer>
           </PaperProvider>
