@@ -17,6 +17,7 @@ import { Chat } from "../web_socket/Chat.Interfaces";
 import { formatDateTime } from "../util/DateFormatter";
 import Loader from "../components/Loader";
 import { StatusBar } from "expo-status-bar";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 type NavigationProps = NativeStackScreenProps<RootParamList, "SingleChatScreen">;
 
@@ -63,6 +64,9 @@ export default function SingleChatScreen({ route }: NavigationProps) {
                         <Text className="text-right text-gray-400 font-EncodeSansCondensedRegular">{formatDateTime(item.updatedAt)}</Text>
                         {isMe && (
                             <View className="flex flex-row justify-center items-center gap-1">
+                                {item.status === "PENDING" && (
+                                    <FontAwesomeIcon icon={faClock as IconProp} size={9} color="#9CA3AF" />
+                                )}
                                 {item.status === "SENT" && (
                                     <FontAwesomeIcon icon={faCheck as IconProp} size={9} color="#9CA3AF" />
                                 )}

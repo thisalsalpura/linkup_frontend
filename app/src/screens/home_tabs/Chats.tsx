@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { TextInput } from "react-native-paper";
@@ -13,6 +13,9 @@ import { useChatList } from "../../web_socket/services/UseChatList";
 import { formatDateTime } from "../../util/DateFormatter";
 import Loader from "../../components/Loader";
 import { Chat } from "../../web_socket/Chat.Interfaces";
+import { useUpdateChatStatus } from "../../web_socket/services/UseUpdateChatStatus";
+import { useWebSocket } from "../../web_socket/WebSocketProvider";
+import { useWebSocketPing } from "../../web_socket/services/UseWebSocketPing";
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, "Home">;
 
@@ -71,11 +74,28 @@ export default function Chats() {
         </TouchableOpacity>
     );
 
+    const updateChatStatus = useUpdateChatStatus();
+
+    const { isConnected } = useWebSocket();
+
+    useWebSocketPing(60000);
+
+    useEffect(() => {
+        updateChatStatus();
+    }, []);
+
+    useEffect(() => {
+        if (isConnected) {
+            updateChatStatus();
+        }
+    }, [isConnected, updateChatStatus]);
+
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
         await fetchChatList();
+        updateChatStatus();
         setRefreshing(false);
     }, [fetchChatList]);
 
@@ -83,6 +103,7 @@ export default function Chats() {
         React.useCallback(() => {
             const refresh = async () => {
                 await fetchChatList();
+                updateChatStatus();
             };
             refresh();
 

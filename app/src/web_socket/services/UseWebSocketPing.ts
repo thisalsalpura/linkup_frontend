@@ -9,7 +9,9 @@ export function useWebSocketPing(interval: number) {
         if (!socket || !isConnected) return;
 
         const pingTimer = setInterval(() => {
-            sendMessage({ type: "PING" });
+            if (socket.readyState === WebSocket.OPEN) {
+                sendMessage({ type: "PING" });
+            }
         }, interval);
 
         const onMessage = (event: MessageEvent) => {

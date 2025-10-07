@@ -259,14 +259,14 @@ export default function Profile() {
                                 <Button
                                     name="Save"
                                     onPress={async () => {
-                                        setUserData((previous) => ({
-                                            ...previous,
-                                            fname: fname,
-                                            lname: lname
-                                        }));
+                                        const updatedUser = {
+                                            ...userData,
+                                            fname,
+                                            lname
+                                        };
 
-                                        const validFname = validateFname(fname);
-                                        const validLname = validateLname(lname);
+                                        const validFname = validateFname(updatedUser.fname);
+                                        const validLname = validateLname(updatedUser.lname);
 
                                         if (validFname) {
                                             Toast.show({
@@ -282,8 +282,8 @@ export default function Profile() {
                                             });
                                         } else {
                                             let validProfileImage;
-                                            if (userData.profileImage) {
-                                                validProfileImage = validateProfileImage({ uri: userData.profileImage, type: "", fileSize: 0 });
+                                            if (updatedUser.profileImage) {
+                                                validProfileImage = validateProfileImage({ uri: updatedUser.profileImage, type: "", fileSize: 0 });
 
                                                 if (validProfileImage) {
                                                     Toast.show({
@@ -297,7 +297,7 @@ export default function Profile() {
                                             try {
                                                 setLoading(true);
 
-                                                const response = await updateUserAccount(String(auth ? auth.userId : 0), userData);
+                                                const response = await updateUserAccount(String(auth ? auth.userId : 0), updatedUser);
 
                                                 if (response.status) {
                                                     Toast.show({
