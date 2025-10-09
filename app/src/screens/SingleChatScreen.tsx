@@ -18,6 +18,8 @@ import { formatDateTime } from "../util/DateFormatter";
 import Loader from "../components/Loader";
 import { StatusBar } from "expo-status-bar";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
+import Modal from 'react-native-modal';
+import { useDeleteChat } from "../web_socket/services/UseDeleteChat";
 
 type NavigationProps = NativeStackScreenProps<RootParamList, "SingleChatScreen">;
 
@@ -35,7 +37,17 @@ export default function SingleChatScreen({ route }: NavigationProps) {
 
     const [chatText, setChatText] = useState('');
 
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    const [chatId, setChatId] = useState(0);
+
     const sendMessage = useSendChat();
+
+    const deleteMessage = useDeleteChat();
 
     const handlerSendChat = () => {
         if (!chatText || chatText.trim().length === 0) {
@@ -46,12 +58,22 @@ export default function SingleChatScreen({ route }: NavigationProps) {
         setChatText('');
     }
 
+    const handlerDeleteChat = () => {
+        deleteMessage(chatId);
+        toggleModal();
+    }
+
     const renderItem = ({ item }: { item: Chat }) => {
+
         const isMe = item.from.id !== friendId;
 
         return (
             <TouchableOpacity className={`h-auto w-auto max-w-[65%] ${isMe ? 'self-end' : 'self-start'}`}>
                 <SimpleRounded
+                    onPressed={() => {
+                        toggleModal();
+                        setChatId(item.id);
+                    }}
                     isSender={isMe ? true : false}
                     senderPoint="TOP"
                     recieverPoint="TOP"
@@ -151,6 +173,32 @@ export default function SingleChatScreen({ route }: NavigationProps) {
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
+
+
+                <Modal
+                    isVisible={isModalVisible}
+                    onBackdropPress={() => setModalVisible(false)}
+                    animationIn="slideInDown"
+                    animationOut="slideOutDown"
+                    backdropOpacity={0}
+                    backdropColor="#ffffff70"
+                    style={{ justifyContent: "center", alignItems: "center", margin: 0 }}
+                >
+                    <View className="h-auto w-[75%] flex flex-col justify-center items-center bg-black dark:bg-white border-2 border-black dark:border-white p-6 rounded-[10px] gap-6 shadow">
+                        <View className="h-auto w-full flex justify-center items-start">
+                            <Text className="text-lg text-white dark:text-black font-EncodeSansCondensedBold tracking-wide">If you want to delete permanently this chat?</Text>
+                        </View>
+
+                        <View className="h-auto w-full flex flex-row justify-between items-center gap-6">
+                            <TouchableOpacity className="h-auto w-auto flex justify-center items-center">
+                                <Text className="text-white dark:text-black font-EncodeSansCondensedBold tracking-wide" onPress={toggleModal}>No</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity className="h-auto w-auto flex justify-center items-center">
+                                <Text className="text-white dark:text-black font-EncodeSansCondensedBold tracking-wide" onPress={handlerDeleteChat}>Yes</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
                 <StatusBar hidden={true} />
             </SafeAreaView>

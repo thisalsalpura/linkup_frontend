@@ -30,6 +30,11 @@ export function useSingleChat(friendId: number): { messages: Chat[]; loading: bo
                     setMessages((prev) => [...prev, response.data_set]);
                 }
             }
+
+            if (response.type === "delete_message") {
+                const deletedChat: Chat = response.data_set;
+                setMessages((prev) => prev.filter(msg => msg.id !== deletedChat.id));
+            }
         };
 
         socket.addEventListener("message", onMessage);

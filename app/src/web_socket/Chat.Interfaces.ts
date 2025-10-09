@@ -9,6 +9,7 @@ export interface User {
 }
 
 export interface Chat {
+    id: number;
     friendId: number;
     friendFname: string;
     friendLname: string;
