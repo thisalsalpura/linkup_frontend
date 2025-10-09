@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import { ALERT_TYPE, AlertNotificationRoot, Toast } from "react-native-alert-notification";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
 import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -45,6 +45,8 @@ export default function SingleChatScreen({ route }: NavigationProps) {
 
     const [chatId, setChatId] = useState(0);
 
+    const [isChatFromMe, setIsChatFromMe] = useState<boolean>(false);
+
     const sendMessage = useSendChat();
 
     const deleteMessage = useDeleteChat();
@@ -59,8 +61,16 @@ export default function SingleChatScreen({ route }: NavigationProps) {
     }
 
     const handlerDeleteChat = () => {
-        deleteMessage(chatId);
-        toggleModal();
+        if (isChatFromMe) {
+            deleteMessage(chatId);
+            toggleModal();
+        } else {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Warning',
+                textBody: "You can delete only your own messages!",
+            });
+        }
     }
 
     const renderItem = ({ item }: { item: Chat }) => {
@@ -73,6 +83,7 @@ export default function SingleChatScreen({ route }: NavigationProps) {
                     onPressed={() => {
                         toggleModal();
                         setChatId(item.id);
+                        setIsChatFromMe(isMe);
                     }}
                     isSender={isMe ? true : false}
                     senderPoint="TOP"
